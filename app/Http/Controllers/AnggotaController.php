@@ -124,7 +124,16 @@ class AnggotaController extends Controller
             'status' => 'success',
             'message' => 'Pengajuan berhasil ditambahkan.',
         ]);
-    }  
+    }
+
+    // --------------------------------- PENCAIRAN PINJAMAN -----------------------------------
+    public function pencairanPinjaman()
+    {
+        $data = [
+            'title' => 'Pengajuan Pencairan Pinjaman',
+        ];
+        return view('roleAnggota.pencairanPinjaman', $data);
+    }
 
     // --------------------------------- TANGGUNGAN ANGGOTA -----------------------------------
     public function tanggungan()

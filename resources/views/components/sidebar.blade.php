@@ -41,6 +41,12 @@
                         <p>Pengajuan Pinjaman</p>
                     </a>
                 </li>
+                <li class="{{request()->is('pencairanPinjaman') ? 'nav-item active' : 'nav-item'}}">
+                    <a href="/pencairanPinjaman">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <p>Pencairan Pinjaman</p>
+                    </a>
+                </li>
                 <li class="{{request()->is('tanggungan') ? 'nav-item active' : 'nav-item'}}">
                     <a href="/tanggungan">
                         <i class="fas fa-donate"></i>
