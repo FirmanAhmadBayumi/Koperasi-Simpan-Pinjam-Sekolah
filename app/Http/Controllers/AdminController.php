@@ -126,7 +126,14 @@ class AdminController extends Controller
         }
     }
 
+    public function kelolaPinjaman()
+    {
+        $data = [
+            'title' => 'Kelola Pinjaman'
+        ];
 
+        return view('roleAdmin.kelolaPinjaman', $data);
+    }
     public function dataSimpananPokok()
     {
         $simpanan = SimpananPokok::orderBy('id_simpanan_pokok', 'asc')->get();
@@ -202,6 +209,15 @@ class AdminController extends Controller
         }
 
         return response()->json(['disableButton' => $disableButton]);
+    }
+
+    public function validasiPencairanPinjaman()
+    {
+        $data = [
+            'title' => 'Pencairan Pinjaman'
+        ];
+
+        return view('roleAdmin.validasiPencairanPinjaman', $data);
     }
 
     protected function createTanggungan($pinjaman)

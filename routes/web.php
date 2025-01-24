@@ -24,6 +24,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::patch('dataAnggota/update/{id_user}', [AdminController::class, 'updateUser'])->name('dataAnggota.update');
     Route::delete('dataAnggota/delete/{id_user}', [AdminController::class, 'destroyUser'])->name('dataAnggota.delete');
 
+    Route::get('validasiPencairanPinjaman', [AdminController::class, 'validasiPencairanPinjaman'])->name('validasiPencairanPinjaman.view');
+
+    Route::get('kelolaPinjaman', [AdminController::class, 'kelolaPinjaman'])->name('aturBungaPinjaman.view');
+
     Route::get('dataTanggungan', [AdminController::class, 'dataTanggungan']);
     Route::get('dataSimpananPokok', [AdminController::class, 'dataSimpananPokok']);
     Route::post('buatTransaksiSimpanan', [AdminController::class, 'buatTransaksiSimpanan']);
