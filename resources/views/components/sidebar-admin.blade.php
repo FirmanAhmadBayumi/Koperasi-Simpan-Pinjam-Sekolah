@@ -47,10 +47,22 @@
                         <p>Data Simpanan Pokok</p>
                     </a>
                 </li>
+                <li class="{{request()->is('kelolaPinjaman') ? 'nav-item active' : 'nav-item'}}">
+                    <a href="kelolaPinjaman">
+                        <i class="fas fa-money-check-alt"></i>
+                        <p>Kelola Pinjaman</p>
+                    </a>
+                </li>
                 <li class="{{request()->is('dataPinjaman') ? 'nav-item active' : 'nav-item'}}">
                     <a href="/dataPinjaman">
                         <i class="fas fa-money-bill-alt"></i>
                         <p>Data Pinjaman</p>
+                    </a>
+                </li>
+                <li class="{{request()->is('validasiPencairanPinjaman') ? 'nav-item active' : 'nav-item'}}">
+                    <a href="/validasiPencairanPinjaman">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <p>Pencairan Pinjaman</p>
                     </a>
                 </li>
                 <li class="{{request()->is('dataTanggungan') ? 'nav-item active' : 'nav-item'}}">
