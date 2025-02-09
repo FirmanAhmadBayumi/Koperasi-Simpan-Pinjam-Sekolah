@@ -10,7 +10,7 @@
         <x-main-header></x-main-header>
 
             <!-- Content -->
-            <div class="container">
+            <div class="container"> 
                 <div class="page-inner">
                     <div class="page-header">
                         <h3 class="fw-bold mb-3">Pengajuan</h3>
@@ -67,8 +67,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header border-0">
                                                     <h5 class="modal-title">
-                                                        <span class="fw-mediumbold"> New</span>
-                                                        <span class="fw-light"> Form </span>
+                                                        <span class="fw-mediumbold">Pengajuan Pinjaman</span>
                                                     </h5>
                                                     <button type="button" class="close" data-bs-dismiss="modal"
                                                         aria-label="Close">
@@ -76,9 +75,6 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p class="small">
-                                                        Mari ajukan peminjaman sesuai dengan kebutuhan Anda...
-                                                    </p>
                                                     <form id="form-pengajuan" method="POST"
                                                         action="{{ route('pengajuan.create') }}">
                                                         @csrf
@@ -107,12 +103,12 @@
                                                         </div>
                                                         <div class="modal-footer border-0">
                                                             <button type="submit" class="btn btn-primary" id="addBtn">
-                                                                Add
+                                                                Simpan
                                                             </button>
 
                                                             <button type="button" class="btn btn-danger"
                                                                 data-bs-dismiss="modal">
-                                                                Close
+                                                                Batal
                                                             </button>
                                                         </div>
                                                     </form>

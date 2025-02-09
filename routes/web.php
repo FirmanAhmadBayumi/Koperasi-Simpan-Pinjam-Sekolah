@@ -55,6 +55,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('pengajuan', [AnggotaController::class, 'createPengajuan'])->name('pengajuan.create');
 
     Route::get('pencairanPinjaman', [AnggotaController::class, 'pencairanPinjaman'])->name('pencairanPinjaman.view');
+    Route::post('pengajuanPencairanPinjaman', [AnggotaController::class, 'buatPengajuanPencairanPinjaman'])->name('pencairanPinjaman.create');
 
     Route::get('/tanggungan', [AnggotaController::class, 'tanggungan'])->name('tanggungan.view');
     Route::post('/updatePinjamanLunas', [AnggotaController::class, 'updatePinjamanLunas'])->name('pinjamanLunas.update');
@@ -67,7 +68,4 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     Route::get('/profile', [AnggotaController::class, 'viewUser'])->name('profile.view');
     Route::patch('/profile', [AnggotaController::class, 'updateUser'])->name('profile.update');
-
-    Route::get('export-transaksi-simpananAnggota', [AnggotaController::class, 'exportExcelTransaksiSimpananAnggota']);
-    Route::get('export-transaksi-pinjamanAnggota', [AnggotaController::class, 'exportExcelTransaksipinjamanAnggota']);
 });

@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class TransaksiPokok extends Model
 {
     use HasFactory;
-
-    public $timestamps = false; // Menonaktifkan timestamps
     protected $primaryKey = 'id_transaksiPokok';
     protected $fillable = ['id_simpanan_pokok','jatuh_tempo', 'tanggal_pembayaran', 'snap_token', 'keterangan'];
 

@@ -169,7 +169,7 @@
     <script src="../assets/js/setting-demo2.js"></script>
 
     <!-- MidTrans -->
-    <script src="https://app.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
     <script type="text/javascript">
         $("#add-row").DataTable({
             pageLength: 25,
