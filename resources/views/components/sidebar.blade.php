@@ -55,7 +55,7 @@
                 </li>
                 <li class="{{request()->is('history') ? 'nav-item active' : 'nav-item'}}">
                     <a href="/history">
-                        <i class="fas fa-hand-holding-usd"></i>
+                        <i class="fas fa-coins"></i>
                         <p>Riwayat Pinjaman</p>
                     </a>
                 </li>

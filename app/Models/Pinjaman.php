@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\Hasmany;
 class Pinjaman extends Model
 {
     use HasFactory;
-    public $timestamps = false;
     protected $table = 'pinjaman';
     protected $primaryKey = 'id_pinjaman';
     protected $fillable = ['id_user', 'tgl_pengajuan', 'besar_pinjaman', 'tenor_pinjaman', 'keterangan'];
@@ -24,5 +23,10 @@ class Pinjaman extends Model
     public function tanggungan(): HasMany
     {
         return $this->hasMany(Tanggungan::class, 'id_pinjaman');
+    }
+
+    public function pencairanPinjaman()
+    {
+        return $this->hasOne(PencairanPinjaman::class, 'id_pinjaman');
     }
 }

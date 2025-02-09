@@ -13,7 +13,7 @@
             <div class="container">
                 <div class="page-inner">
                     <div class="page-header">
-                        <h3 class="fw-bold mb-3">Pengajuan</h3>
+                        <h3 class="fw-bold mb-3">Pencairan Pinjaman</h3>
                         <ul class="breadcrumbs mb-3">
                             <li class="nav-home">
                                 <a href="#">
@@ -24,7 +24,7 @@
                                 <i class="icon-arrow-right"></i>
                             </li>
                             <li class="nav-item">
-                                <a href="#">Pengajuan Pinjaman</a>
+                                <a href="#">Pengajuan Pencairan Pinjaman</a>
                             </li>
                         </ul>
                     </div>
@@ -53,7 +53,8 @@
                                 <div class="card-header">
                                     <div class="d-flex align-items-center">
                                         <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
-                                            data-bs-target="#addRowModal">
+                                            data-bs-target="#addRowModal"
+                                            {{ $statusTombol == 'disabled' ? 'disabled' : '' }}>
                                             <i class="fa fa-plus"></i>
                                             Ajukan Pencairan
                                         </button>
@@ -79,7 +80,7 @@
                                                         Ajukan Pencairan Pinjaman
                                                     </p>
                                                     <form id="form-pengajuan" method="POST"
-                                                        action="{{ route('pengajuan.create') }}">
+                                                        action="{{ route('pencairanPinjaman.create') }}">
                                                         @csrf
                                                         <div class="row">
                                                             <div class="col-sm-12">
@@ -91,81 +92,55 @@
                                                             </div>
                                                             <div class="col-md-6 pe-0">
                                                                 <div class="form-group form-group-default">
-                                                                    <label>Nama Anggota</label>
-                                                                    <input name="besar_pinjaman" id="addBesar"
-                                                                        type="text" class="form-control" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group form-group-default">
                                                                     <label>Besar Pinjaman</label>
-                                                                    <input name="tenor_pinjaman" id="addTenor"
-                                                                        type="text" class="form-control" />
+                                                                    <input name="besar_pinjaman" id="addBesar"
+                                                                        type="text" class="form-control"
+                                                                        value="{{ $pinjamanAktif->besar_pinjaman ?? '' }}"
+                                                                        readonly />
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-6 pe-0">
                                                                 <div class="form-group form-group-default">
                                                                     <label>Tenor Pinjaman</label>
-                                                                    <input name="tenor_pinjaman" id="addTenor"
-                                                                        type="text" class="form-control" />
+                                                                    <input name="besar_pinjaman" id="addBesar"
+                                                                        type="text" class="form-control"
+                                                                        value="{{ $pinjamanAktif->tenor_pinjaman ?? '' }}"
+                                                                        readonly />
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group form-group-default">
-                                                                    <label>Status Pinjaman</label>
-                                                                    <input name="tenor_pinjaman" id="addTenor"
-                                                                        type="text" class="form-control" />
+                                                            <div class="form-group">
+                                                                <label>Metode Pencairan</label>
+                                                                <div>
+                                                                    <input type="radio" id="metodeTransfer"
+                                                                        name="metode_pengiriman_pinjaman"
+                                                                        value="Transfer Rekening"
+                                                                        onchange="toggleMetode()">
+                                                                    Transfer Rekening
+                                                                    <input type="radio" id="metodeTunai"
+                                                                        name="metode_pengiriman_pinjaman" value="Tunai"
+                                                                        onchange="toggleMetode()">
+                                                                    Tunai
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-12">
+                                                            <div id="transferRekeningDiv" style="display: none;">
+                                                                <span class="fw-mediumbold"> Pastikan Nomor Rekening
+                                                                    BENAR!</span>
                                                                 <div class="form-group">
-                                                                    <label>Metode Pencairan</label>
-                                                                    <div
-                                                                        class="d-flex justify-content-start align-items-center gap-">
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input"
-                                                                                type="radio" name="metode_pencairan"
-                                                                                id="metodeTransfer" value="transfer"
-                                                                                onchange="toggleMetode()">
-                                                                            <label class="form-check-label"
-                                                                                for="metodeTransfer">
-                                                                                Transfer Rekening
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input"
-                                                                                type="radio" name="metode_pencairan"
-                                                                                id="metodeTunai" value="tunai"
-                                                                                onchange="toggleMetode()">
-                                                                            <label class="form-check-label"
-                                                                                for="metodeTunai">
-                                                                                Tunai
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-md-12" id="transferRekeningDiv"
-                                                                style="display: none;">
-                                                                <div class="form-group form-group-default">
                                                                     <label>Nomor Rekening</label>
-                                                                    <input name="no_rekening" id="noRekening"
-                                                                        type="text" class="form-control">
+                                                                    <input type="text" name="nomor_rekening"
+                                                                        class="form-control">
                                                                 </div>
-                                                                <div class="form-group form-group-default">
+                                                                <div class="form-group">
                                                                     <label>Nama Bank</label>
-                                                                    <input name="nama_bank" id="namaBank"
-                                                                        type="text" class="form-control">
+                                                                    <input type="text" name="nama_bank"
+                                                                        class="form-control">
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-md-12" id="tunaiDiv"
-                                                                style="display: none;">
-                                                                <div class="form-group form-group-default">
-                                                                    <label>Catatan Pencairan Tunai</label>
-                                                                    <input name="catatan_tunai" id="catatanTunai"
-                                                                        type="text" class="form-control">
+                                                            <div id="tunaiDiv" style="display: none;">
+                                                                <div class="form-group">
+                                                                    <span class="fw-mediumbold">Silahkan Mendatangi
+                                                                        Pihak Koperasi!</span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -194,21 +169,24 @@
                                                     <th>Tanggal Pengajuan Pencairan</th>
                                                     <th>Besar Pinjaman</th>
                                                     <th>Tenor Pinjaman</th>
-                                                    <th>Status Pinjaman</th>
                                                     <th>Metode Pencairan</th>
-                                                    <th>Validasi Pencairan Pinjaman</th>
+                                                    <th>Nomor Rekening</th>
+                                                    <th>Nama Bank</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>2024-12-11</td>
-                                                    <td>Rp.5.000.0000</td>
-                                                    <td>10</td>
-                                                    <td><button class="btn btn-success" disabled>Disetujui</button></td>
-                                                    <td>Transfer Rekening(BCA 7268762829)</td>
-                                                    <td><button class="btn btn-warning" disabled>Diproses</button></td>
-                                                </tr>
+                                                @forelse ($riwayatPencairanPinjaman as $r)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $r->tgl_pengajuan }}</td>
+                                                        <td>{{ $r->pinjaman->besar_pinjaman }}</td>
+                                                        <td>{{ $r->pinjaman->tenor_pinjaman }}</td>
+                                                        <td>{{ $r->metode_pengiriman_pinjaman }}</td>
+                                                        <td>{{ $r->nomor_rekening }}</td>
+                                                        <td>{{ $r->nama_bank }}</td>
+                                                    </tr>
+                                                @empty
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>
@@ -243,43 +221,60 @@
     <script>
         var SweetAlert2Demo = (function() {
             var initDemos = function() {
-
                 $("#addBtn").click(function(e) {
-                    e.preventDefault(); // Prevent form submission
+                    e.preventDefault(); // Mencegah pengiriman form langsung
                     var form = $('#form-pengajuan');
                     var formData = form.serialize();
+                    var metodePengiriman = $('input[name="metode_pengiriman_pinjaman"]:checked').val();
+                    var nomorRekening = $('input[name="nomor_rekening"]').val();
+                    var namaBank = $('input[name="nama_bank"]').val();
 
-                    var besarPinjaman = parseInt($('#addBesar').val());
-                    var tenorPinjaman = parseInt($('#addTenor').val());
-
-                    if (besarPinjaman > 100000000) {
+                    // Validasi input di sisi frontend
+                    if (!metodePengiriman) {
                         swal({
                             title: "Error!",
-                            text: "Besar pinjaman tidak boleh lebih dari 100 juta.",
+                            text: "Silakan pilih metode pencairan.",
                             icon: "error",
                             buttons: {
                                 confirm: {
-                                    className: "btn btn-danger",
+                                    className: "btn btn-danger"
                                 },
                             },
                         });
                         return;
                     }
 
-                    if (tenorPinjaman > 50) {
-                        swal({
-                            title: "Error!",
-                            text: "Tenor pinjaman tidak boleh lebih dari 50 bulan.",
-                            icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
+                    if (metodePengiriman === "Transfer Rekening") {
+                        if (!nomorRekening || isNaN(nomorRekening)) {
+                            swal({
+                                title: "Error!",
+                                text: "Nomor rekening harus diisi dan berupa angka.",
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger"
+                                    },
                                 },
-                            },
-                        });
-                        return;
+                            });
+                            return;
+                        }
+
+                        if (!namaBank.trim()) {
+                            swal({
+                                title: "Error!",
+                                text: "Nama bank harus diisi.",
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger"
+                                    },
+                                },
+                            });
+                            return;
+                        }
                     }
 
+                    // Kirim data via AJAX
                     $.ajax({
                         type: "POST",
                         url: form.attr('action'),
@@ -288,22 +283,21 @@
                             if (response.status === 'warning') {
                                 swal({
                                     title: "Peringatan!",
-                                    content: $('<div>').html(response.message)[0],
+                                    text: response.message,
                                     icon: "warning",
                                     buttons: {
                                         confirm: {
-                                            className: "btn btn-warning",
+                                            className: "btn btn-warning"
                                         },
                                     },
                                 });
                             } else {
                                 swal({
-                                    title: "Pengajuan Diproses!",
-                                    text: "Cek secara berkala pengajuan peminjaman Anda.",
+                                    title: "Pengajuan Pencairan Pinjaman Berhasil",
                                     icon: "success",
                                     buttons: {
                                         confirm: {
-                                            className: "btn btn-success",
+                                            className: "btn btn-success"
                                         },
                                     },
                                 }).then((willReload) => {
@@ -313,14 +307,22 @@
                                 });
                             }
                         },
-                        error: function() {
+                        error: function(xhr) {
+                            var errors = xhr.responseJSON.errors;
+                            var errorMessage = "Terjadi kesalahan, silakan coba lagi.";
+
+                            if (errors) {
+                                errorMessage = Object.values(errors).map(msg => msg.join(
+                                    '\n')).join('\n');
+                            }
+
                             swal({
                                 title: "Error!",
-                                text: "Terjadi kesalahan, silakan coba lagi.",
+                                text: errorMessage,
                                 icon: "error",
                                 buttons: {
                                     confirm: {
-                                        className: "btn btn-danger",
+                                        className: "btn btn-danger"
                                     },
                                 },
                             });
@@ -328,15 +330,14 @@
                     });
                 });
             };
+
             return {
-                //== Init
                 init: function() {
                     initDemos();
                 },
             };
         })();
 
-        //== Class Initialization
         jQuery(document).ready(function() {
             SweetAlert2Demo.init();
         });
@@ -391,13 +392,13 @@
                         title: "Tenor Pinjaman"
                     },
                     {
-                        title: "Status Pinjaman",
-                    },
-                    {
                         title: "Metode Pencairan",
                     },
                     {
-                        title: "Validasi Pencairan Pinjaman",
+                        title: "Nomor Rekening",
+                    },
+                    {
+                        title: "Nama Bank",
                         orderable: false
                     },
                 ]

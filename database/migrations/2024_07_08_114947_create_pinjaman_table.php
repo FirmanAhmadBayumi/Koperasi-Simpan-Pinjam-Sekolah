@@ -21,6 +21,7 @@ return new class extends Migration
             $table->float('besar_pinjaman');
             $table->float('tenor_pinjaman');
             $table->string('keterangan')->default('Diproses');
+            $table->timestamps();
         });
     }
 
