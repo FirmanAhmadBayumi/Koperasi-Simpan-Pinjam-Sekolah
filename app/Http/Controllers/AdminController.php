@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExportTransaksiPinjaman;
 use App\Exports\ExportTransaksiSimpanan;
+use App\Models\PencairanPinjaman;
 
 class AdminController extends Controller
 {
@@ -126,14 +127,13 @@ class AdminController extends Controller
         }
     }
 
-    public function kelolaPinjaman()
-    {
+    public function konfigurasiPinjaman(){
         $data = [
-            'title' => 'Kelola Pinjaman'
+            'title' => 'Konfigurasi Pinjaman'
         ];
-
-        return view('roleAdmin.kelolaPinjaman', $data);
+        return view('roleAdmin.konfigurasiPinjaman', $data);
     }
+
     public function dataSimpananPokok()
     {
         $simpanan = SimpananPokok::orderBy('id_simpanan_pokok', 'asc')->get();
@@ -158,9 +158,9 @@ class AdminController extends Controller
 
         // Set your Merchant Server Key
         \Midtrans\Config::$serverKey = config('midtrans.serverKey');
-        \Midtrans\Config::$isProduction = config('midtrans.isProduction');
-        \Midtrans\Config::$isSanitized = config('midtrans.isSanitized');
-        \Midtrans\Config::$is3ds = config('midtrans.is3ds');
+        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
 
         foreach ($simpananList as $simpanan) {
             $params = [
@@ -211,15 +211,6 @@ class AdminController extends Controller
         return response()->json(['disableButton' => $disableButton]);
     }
 
-    public function validasiPencairanPinjaman()
-    {
-        $data = [
-            'title' => 'Pencairan Pinjaman'
-        ];
-
-        return view('roleAdmin.validasiPencairanPinjaman', $data);
-    }
-
     protected function createTanggungan($pinjaman)
     {
         $besar_pinjaman = $pinjaman->besar_pinjaman;
@@ -237,11 +228,11 @@ class AdminController extends Controller
         // Set your Merchant Server Key
         \Midtrans\Config::$serverKey = config('midtrans.serverKey');
         // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-        \Midtrans\Config::$isProduction = config('midtrans.isProduction');
+        \Midtrans\Config::$isProduction = false;
         // Set sanitization on (default)
-        \Midtrans\Config::$isSanitized = config('midtrans.isSanitized');
+        \Midtrans\Config::$isSanitized = true;
         // Set 3DS transaction for credit card to true
-        \Midtrans\Config::$is3ds = config('midtrans.is3ds');
+        \Midtrans\Config::$is3ds = true;
 
         // Pembayaran Lunas
         $paramsLunas = array(
@@ -330,17 +321,6 @@ class AdminController extends Controller
         ];
 
         return view('roleAdmin.dataTanggungan', $data, compact('tanggungan'));
-    }
-
-    public function destroyUser(Request $request, $id)
-    {
-        try {
-            $user = User::findOrFail($id);
-            $user->delete();
-            return response()->json(['success' => 'Anggota berhasil dihapus.']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal menghapus anggota.'], 500);
-        }
     }
 
     public function viewTransaksiSimpanan(){
