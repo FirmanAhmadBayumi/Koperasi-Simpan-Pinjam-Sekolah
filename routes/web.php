@@ -24,9 +24,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::patch('dataAnggota/update/{id_user}', [AdminController::class, 'updateUser'])->name('dataAnggota.update');
     Route::delete('dataAnggota/delete/{id_user}', [AdminController::class, 'destroyUser'])->name('dataAnggota.delete');
 
-    Route::get('validasiPencairanPinjaman', [AdminController::class, 'validasiPencairanPinjaman'])->name('validasiPencairanPinjaman.view');
-
-    Route::get('kelolaPinjaman', [AdminController::class, 'kelolaPinjaman'])->name('aturBungaPinjaman.view');
+    Route::get('konfigurasiPinjaman', [AdminController::class, 'konfigurasiPinjaman'])->name('konfigurasiPinjaman');
 
     Route::get('dataTanggungan', [AdminController::class, 'dataTanggungan']);
     Route::get('dataSimpananPokok', [AdminController::class, 'dataSimpananPokok']);
@@ -39,11 +37,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('transaksiSimpanan', [AdminController::class, 'viewTransaksiSimpanan'])->name('viewTransaksiSimpanan.view');
     Route::get('transaksiPinjaman', [AdminController::class, 'viewTransaksiPinjaman'])->name('viewTransaksiPinjaman.view');
-
-    Route::get('export-anggota', [AdminController::class, 'exportExcelAnggota']);
-    Route::get('export-transaksi-simpanan', [AdminController::class, 'exportExcelTransaksiSimpanan']);
-    Route::get('export-tanggungan', [AdminController::class, 'exportExcelTanggungan']);
-    Route::get('export-transaksi-pinjaman', [AdminController::class, 'exportExcelTransaksiPinjaman']);
 });
 
 // Routes Role Anggota
