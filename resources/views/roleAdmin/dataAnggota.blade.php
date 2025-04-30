@@ -39,9 +39,6 @@
                                                 <i class="fa fa-plus"></i>
                                                 Tambah Anggota
                                             </button>
-                                            <a href="{{ 'export-anggota' }}" class="btn btn-success btn-round ms-auto">
-                                                <i class="fa fa-file-excel"></i> Ekspor Excel
-                                            </a>
                                         </div>
                                     </div>
                                     <div class="card-body">
@@ -199,7 +196,7 @@
                                     </div>
                                     <div class="modal-footer border-0">
                                         <button type="submit" class="btn btn-primary"
-                                            id="addAnggota">Tambah</button>
+                                            id="addAnggota">Simpan</button>
                                         <button type="button" class="btn btn-danger"
                                             data-bs-dismiss="modal">Batal</button>
                                     </div>
@@ -274,7 +271,7 @@
                                     </div>
                                     <div class="modal-footer border-0">
                                         <button type="submit" class="btn btn-primary" id="addBtn">
-                                            Edit
+                                            Simpan
                                         </button>
                                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
                                             Batal
@@ -348,8 +345,7 @@
                                 confirmButtonText: 'OK',
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    location
-                                        .reload(); // Reload the page to reflect the changes
+                                    location.reload();
                                 }
                             });
                         } else {

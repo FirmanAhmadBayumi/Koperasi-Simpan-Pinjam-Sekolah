@@ -25,6 +25,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('dataAnggota/delete/{id_user}', [AdminController::class, 'destroyUser'])->name('dataAnggota.delete');
 
     Route::get('konfigurasiPinjaman', [AdminController::class, 'konfigurasiPinjaman'])->name('konfigurasiPinjaman');
+    Route::post('updateKonfigPinjaman', [AdminController::class, 'updateKonfigurasiPinjaman'])->name('konfigPinjaman.update');
 
     Route::get('dataTanggungan', [AdminController::class, 'dataTanggungan']);
     Route::get('dataSimpananPokok', [AdminController::class, 'dataSimpananPokok']);

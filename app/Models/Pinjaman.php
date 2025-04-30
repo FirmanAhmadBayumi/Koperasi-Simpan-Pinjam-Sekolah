@@ -24,9 +24,4 @@ class Pinjaman extends Model
     {
         return $this->hasMany(Tanggungan::class, 'id_pinjaman');
     }
-
-    public function pencairanPinjaman()
-    {
-        return $this->hasOne(PencairanPinjaman::class, 'id_pinjaman');
-    }
 }
