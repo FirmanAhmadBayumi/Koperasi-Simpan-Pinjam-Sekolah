@@ -32,13 +32,6 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
-                                <div class="card-header">
-                                    <div class="d-flex align-items-center">
-                                        <a href="{{ 'export-transaksi-pinjaman' }}" class="btn btn-success btn-round ms-auto">
-                                            <i class="fa fa-file-excel"></i> Ekspor Excel
-                                        </a>
-                                    </div>
-                                </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table id="add-row" class="display table table-striped table-hover">

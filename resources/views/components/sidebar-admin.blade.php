@@ -43,11 +43,11 @@
                 </li>
                 <li class="nav-item">
                     <a href="">
-                        <i class="fas fa-file-alt"></i>
+                        <i class="fas fa-school"></i>
                         <p>Kelola Profil Sekolah</p>
                     </a>
                 </li>
-                <li class="{{request()-> is('konfigurasiPinjaman') ? 'nav-item active' : 'nav-item'}}">
+                <li class="{{request()->is('konfigurasiPinjaman') ? 'nav-item active' : 'nav-item'}}">
                     <a href="/konfigurasiPinjaman">
                         <i class="fas fa-cogs"></i>
                         <p>Konfigurasi Pinjaman</p>

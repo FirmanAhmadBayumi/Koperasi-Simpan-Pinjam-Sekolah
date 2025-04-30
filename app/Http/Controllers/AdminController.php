@@ -10,12 +10,14 @@ use App\Models\SimpananPokok;
 use App\Exports\ExportAnggota;
 use App\Models\TransaksiPokok;
 use App\Exports\ExportTanggungan;
+use App\Models\PencairanPinjaman;
 use App\Models\TransaksiPinjaman;
 use Illuminate\Support\Facades\DB;
+use App\Models\KonfigurasiPinjaman;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExportTransaksiPinjaman;
 use App\Exports\ExportTransaksiSimpanan;
-use App\Models\PencairanPinjaman;
 
 class AdminController extends Controller
 {
@@ -128,10 +130,42 @@ class AdminController extends Controller
     }
 
     public function konfigurasiPinjaman(){
+        $konfigurasiPinjaman = KonfigurasiPinjaman::first();
+
         $data = [
-            'title' => 'Konfigurasi Pinjaman'
+            'title' => 'Konfigurasi Pinjaman',
         ];
-        return view('roleAdmin.konfigurasiPinjaman', $data);
+        return view('roleAdmin.konfigurasiPinjaman', $data, compact('konfigurasiPinjaman'));
+    }
+
+    public function updateKonfigurasiPinjaman(Request $request){
+        $data = $request->validate([
+            'bunga_pinjaman' => 'required|numeric|between:0.03,1.00|regex:/^\d+(\.\d{1,2})?$/',
+            'maks_pinjaman' => 'required|numeric|min:500000',
+            'maks_tenor' => 'required|numeric|min:3'
+        ],[
+            'bunga_pinjaman.required' => 'Bunga pinjaman wajib diisi.',
+            'bunga_pinjaman.numeric' => 'Bunga pinjaman diisi dengan angka.',
+            'bunga_pinjaman.regex' => 'Bunga pinjaman diisi dengan angka desimal. (Maks. 2 digit setelah koma)',
+            'bunga_pinjaman.between' => 'Bunga pinjaman harus antara 0.03 (3%) sampai 1.00 (100%).',
+
+            'maks_pinjaman.required' => 'Maksimal pinjaman wajib diisi.',
+            'maks_pinjaman.min' => 'Minimal pinjaman adalah Rp.500.000',
+
+            'maks_tenor.required' => 'Maksimal Tenor wajib diisi.',
+            'maks_tenor.numeric' => 'Maksimal Tenor diisi dengan angka.',
+            'maks_tenor.min' => 'Minimal tenor adalah 3 bulan.'
+        ]);
+
+        // ambil user id dari session (Asumsi pakai Auth)
+        $data['id_user'] = Auth::user()->id_user;
+
+        KonfigurasiPinjaman::updateOrCreate(
+            ['id_user' => $data['id_user']],
+            $data
+        );
+
+        return response()->json(['message' => 'Berhasil']);
     }
 
     public function dataSimpananPokok()

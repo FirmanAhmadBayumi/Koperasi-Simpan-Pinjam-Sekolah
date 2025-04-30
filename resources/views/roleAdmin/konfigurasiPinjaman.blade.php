@@ -51,6 +51,9 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <td>{{ $konfigurasiPinjaman->bunga_pinjaman }}</td>
+                                                    <td>{{ $konfigurasiPinjaman->maks_pinjaman }}</td>
+                                                    <td>{{ $konfigurasiPinjaman->maks_tenor }}</td>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -70,25 +73,28 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="form-tambahanggota" method="POST" action="#">
+                                <form id="form-konfigurasi" method="POST" action="{{ route('konfigPinjaman.update') }}">
                                     @csrf
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group form-group-default">
-                                                <label>Bunga Pinjaman</label>
-                                                <input name="bungaPinjaman" id="bungaPinjaman" type="text" class="form-control" />
+                                                <label>Bunga Pinjaman (%)</label>
+                                                <input name="bunga_pinjaman" id="bungaPinjaman" type="text" class="form-control"
+                                                value="{{ old('bunga_pinjaman', $konfigurasiPinjaman->bunga_pinjaman) }}"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group form-group-default">
-                                                <label>Maksimal Pinjaman</label>
-                                                <input name="maksPinjaman" id="maksPinjaman" type="text" class="form-control" />
+                                                <label>Maksimal Pinjaman (RP)</label>
+                                                <input name="maks_pinjaman" id="maksPinjaman" type="number" class="form-control" min="0"
+                                                value="{{ old('maks_pinjaman', $konfigurasiPinjaman->maks_pinjaman) }}"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group form-group-default">
-                                                <label>Maksimal Tenor</label>
-                                                <input name="maksTenor" id="maksTenor" type="text" class="form-control" />
+                                                <label>Maksimal Tenor (/Bulan)</label>
+                                                <input name="maks_tenor" id="maksTenor" type="number" class="form-control" min="0"
+                                                value="{{ old('maks_tenor', $konfigurasiPinjaman->maks_tenor) }}"/>
                                             </div>
                                         </div>
                                         <div class="modal-footer border-0">
@@ -123,11 +129,70 @@
     <script src="../assets/js/setting-demo2.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // DataTable initialization
+            // Inisialisasi DataTable
             $("#basic-datatables").DataTable({});
+            $("#add-row").DataTable({ pageLength: 1 });
 
-            $("#add-row").DataTable({
-                pageLength: 25,
+            $('#form-konfigurasi').on('submit', function (e) {
+                e.preventDefault();
+
+                // const bungaInput = $('#bungaPinjaman').val();
+                // const decimalRegex = /^(0(\.\d{1,2})?|1(\.0{1,2})?)$/;
+                // const bungaValue = parseFloat(bungaInput);
+
+                // if (!decimalRegex.test(bungaInput) || bungaValue < 0 || bungaValue > 1) {
+                //     Swal.fire({
+                //         icon: 'error',
+                //         title: 'Format Bunga Salah',
+                //         html: 'Bunga pinjaman harus dalam format desimal (0.00 - 1.00).<br>Contoh: <b>0.05</b> (5%) atau <b>0.15</b> (15%).',
+                //         confirmButtonText: 'Mengerti'
+                //     });
+                //     return;
+                // }
+                
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: $(this).attr('method'),
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Konfigurasi pinjaman berhasil disimpan',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            $('#konfigurasiPinjamanModal').modal('hide');
+                            location.reload(); // Optional: reload page if needed
+                        });
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 422) {
+                            // Validation error
+                            let errors = xhr.responseJSON.errors;
+                            let errorMessages = '';
+
+                            for (let field in errors) {
+                                errorMessages += errors[field].join('<br>') + '<br>';
+                            }
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                html: errorMessages,
+                                confirmButtonText: 'Mengerti'
+                            });
+                        } else {
+                            // Other errors
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Terjadi kesalahan saat menyimpan data',
+                                confirmButtonText: 'Mengerti'
+                            });
+                        }
+                    }
+                });
             });
         });
     </script>
