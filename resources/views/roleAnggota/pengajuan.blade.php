@@ -88,16 +88,17 @@
                                                             </div>
                                                             <div class="col-md-6 pe-0">
                                                                 <div class="form-group form-group-default">
-                                                                    <label>Besar Pinjaman (Maks 100 Juta)</label>
+                                                                    <label>(Maks Rp.{{ number_format($getKonfigPinjaman->maks_pinjaman, 0, ',', '.') }})</label>
+                                                                    
                                                                     <input name="besar_pinjaman" id="addBesar"
-                                                                        type="text" class="form-control" />
+                                                                        type="text" class="form-control" placeholder="Besar Pinjaman"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="form-group form-group-default">
-                                                                    <label>Tenor Pinjaman (Maks 50x)</label>
+                                                                    <label> (Maks {{ $getKonfigPinjaman->maks_tenor }} bulan)</label>
                                                                     <input name="tenor_pinjaman" id="addTenor"
-                                                                        type="text" class="form-control" />
+                                                                        type="text" class="form-control" placeholder="Tenor Pinjaman"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -182,104 +183,106 @@
     <script src="../assets/js/setting-demo2.js"></script>
     <script>
         var SweetAlert2Demo = (function () {
-            var initDemos = function () {
+                var initDemos = function () {
 
-                $("#addBtn").click(function (e) {
-                    e.preventDefault(); // Prevent form submission
-                    var form = $('#form-pengajuan');
-                    var formData = form.serialize();
-
-                    var besarPinjaman = parseInt($('#addBesar').val());
-                    var tenorPinjaman = parseInt($('#addTenor').val());
-
-                    if (besarPinjaman > 100000000) {
-                        swal({
-                            title: "Error!",
-                            text: "Besar pinjaman tidak boleh lebih dari 100 juta.",
-                            icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
-                        });
-                        return;
-                    }
-
-                    if (tenorPinjaman > 50) {
-                        swal({
-                            title: "Error!",
-                            text: "Tenor pinjaman tidak boleh lebih dari 50 bulan.",
-                            icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
-                        });
-                        return;
-                    }
-
-                    $.ajax({
-                        type: "POST",
-                        url: form.attr('action'),
-                        data: formData,
-                        success: function (response) {
-                            if (response.status === 'warning') {
-                                swal({
-                                    title: "Peringatan!",
-                                    content: $('<div>').html(response.message)[0],
-                                    icon: "warning",
-                                    buttons: {
-                                        confirm: {
-                                            className: "btn btn-warning",
-                                        },
-                                    },
-                                });
-                            } else {
-                                swal({
-                                    title: "Pengajuan Diproses!",
-                                    text: "Cek secara berkala pengajuan peminjaman Anda.",
-                                    icon: "success",
-                                    buttons: {
-                                        confirm: {
-                                            className: "btn btn-success",
-                                        },
-                                    },
-                                }).then((willReload) => {
-                                    if (willReload) {
-                                        location.reload();
-                                    }
-                                });
-                            }
-                        },
-                        error: function () {
-                            swal({
-                                title: "Error!",
-                                text: "Terjadi kesalahan, silakan coba lagi.",
-                                icon: "error",
-                                buttons: {
-                                    confirm: {
-                                        className: "btn btn-danger",
-                                    },
-                                },
-                            });
-                        }
+                    // Isi otomatis tanggal pengajuan saat modal ditampilkan
+                    $('#addRowModal').on('show.bs.modal', function () {
+                        var now = new Date();
+                        var formatted = now.getFullYear() + "-" +
+                            String(now.getMonth() + 1).padStart(2, '0') + "-" +
+                            String(now.getDate()).padStart(2, '0') + " " +
+                            String(now.getHours()).padStart(2, '0') + ":" +
+                            String(now.getMinutes()).padStart(2, '0') + ":" +
+                            String(now.getSeconds()).padStart(2, '0');
+                        $('#addTgl').val(formatted);
                     });
-                });
-            };
-            return {
-                //== Init
-                init: function () {
-                    initDemos();
-                },
-            };
-        })();
 
-        //== Class Initialization
-        jQuery(document).ready(function () {
-            SweetAlert2Demo.init();
-        });
+                    // Handle submit tombol simpan
+                    $("#addBtn").click(function (e) {
+                        e.preventDefault(); // Hindari submit default
+
+                        var form = $('#form-pengajuan');
+                        var formData = form.serialize();
+                        // Kirim data via AJAX
+                        $.ajax({
+                            type: "POST",
+                            url: form.attr('action'),
+                            data: formData,
+                            success: function (response) {
+                                if (response.status === 'warning') {
+                                    swal({
+                                        title: "Peringatan!",
+                                        content: $('<div>').html(response.message)[0],
+                                        icon: "warning",
+                                        buttons: {
+                                            confirm: {
+                                                className: "btn btn-warning",
+                                            },
+                                        },
+                                    });
+                                } else {
+                                    swal({
+                                        title: "Pengajuan Diproses!",
+                                        text: "Cek secara berkala pengajuan peminjaman Anda.",
+                                        icon: "success",
+                                        buttons: {
+                                            confirm: {
+                                                className: "btn btn-success",
+                                            },
+                                        },
+                                    }).then((willReload) => {
+                                        if (willReload) {
+                                            location.reload();
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (xhr) {
+                                if (xhr.status === 422) {
+                                    var errors = xhr.responseJSON.errors;
+                                    var messages = "";
+                                    $.each(errors, function (key, value) {
+                                        messages += value[0] + "\n";
+                                    });
+
+                                    swal({
+                                        title: "Pengajuan Gagal",
+                                        text: messages,
+                                        icon: "error",
+                                        buttons: {
+                                            confirm: {
+                                                className: "btn btn-danger",
+                                            },
+                                        },
+                                    });
+                                } else {
+                                    swal({
+                                        title: "Error!",
+                                        text: "Terjadi kesalahan, silakan coba lagi.",
+                                        icon: "error",
+                                        buttons: {
+                                            confirm: {
+                                                className: "btn btn-danger",
+                                            },
+                                        },
+                                    });
+                                }
+                            }
+                        });
+                })
+                };
+
+                return {
+                    init: function () {
+                        initDemos();
+                    },
+                };
+            })();
+
+            // Jalankan skrip setelah DOM siap
+            document.addEventListener("DOMContentLoaded", function () {
+                SweetAlert2Demo.init();
+            });
 
         $(document).ready(function () {
             $("#basic-datatables").DataTable({});

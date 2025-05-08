@@ -26,7 +26,7 @@
                 <li class="{{request()->is('dashboard', 'profile') ? 'nav-item active' : 'nav-item'}}">
                     <a href="/dashboard">
                         <i class="fas fa-home"></i>
-                        <p>Dashboard</p>
+                        <p>Beranda</p>
                     </a>
                 </li>
                 <li class="nav-section">
@@ -41,24 +41,18 @@
                         <p>Pengajuan Pinjaman</p>
                     </a>
                 </li>
-                <li class="{{request()->is('pencairanPinjaman') ? 'nav-item active' : 'nav-item'}}">
-                    <a href="/pencairanPinjaman">
-                        <i class="fas fa-hand-holding-usd"></i>
-                        <p>Pencairan Pinjaman</p>
-                    </a>
-                </li>
                 <li class="{{request()->is('tanggungan') ? 'nav-item active' : 'nav-item'}}">
                     <a href="/tanggungan">
                         <i class="fas fa-donate"></i>
-                        <p>Tanggungan Anggota</p>
+                        <p>Pembayaran</p>
                     </a>
                 </li>
-                <li class="{{request()->is('history') ? 'nav-item active' : 'nav-item'}}">
+                {{-- <li class="{{request()->is('history') ? 'nav-item active' : 'nav-item'}}">
                     <a href="/history">
                         <i class="fas fa-coins"></i>
                         <p>Riwayat Pinjaman</p>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item {{ request()->is('transaksiSimpananUser', 'transaksiPinjamanUser') ? 'active' : '' }}">
                     <a href="#" data-bs-toggle="collapse" data-bs-target="#submenuTransaksi" aria-expanded="{{ request()->is('transaksiSimpanan', 'transaksiPinjaman') ? 'true' : 'false' }}" aria-controls="submenuTransaksi">
                         <i class="fas fa-history"></i>
@@ -67,14 +61,14 @@
                     </a>
                     <div class="collapse {{ request()->is('transaksiSimpananUser', 'transaksiPinjamanUser') ? 'show' : '' }}" id="submenuTransaksi">
                         <ul class="nav nav-collapse">
-                            <li class="{{ request()->is('transaksiSimpananUser') ? 'active' : '' }}">
-                                <a href="/transaksiSimpananUser">
-                                    <span class="sub-item">Transaksi Simpanan</span>
-                                </a>
-                            </li>
                             <li class="{{ request()->is('transaksiPinjamanUser') ? 'active' : '' }}">
                                 <a href="/transaksiPinjamanUser">
-                                    <span class="sub-item">Transaksi Pinjaman</span>
+                                    <span class="sub-item">Pinjaman</span>
+                                </a>
+                            </li>
+                            <li class="{{ request()->is('transaksiSimpananUser') ? 'active' : '' }}">
+                                <a href="/transaksiSimpananUser">
+                                    <span class="sub-item">Simpanan Pokok</span>
                                 </a>
                             </li>
                         </ul>
