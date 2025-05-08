@@ -12,6 +12,7 @@ use App\Models\TransaksiPokok;
 use App\Models\PencairanPinjaman;
 use App\Models\TransaksiPinjaman;
 use Illuminate\Support\Facades\DB;
+use App\Models\KonfigurasiPinjaman;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
@@ -79,13 +80,18 @@ class AnggotaController extends Controller
     public function pengajuan(Request $request)
     {
         $pinjaman = Pinjaman::where('id_user', Auth::user()->id_user)->orderBy('id_pinjaman', 'asc')->get();
+        $getKonfigPinjaman = KonfigurasiPinjaman::latest()->first();
         $data = [
             'title' => 'Pengajuan',
+            'getKonfigPinjaman' => $getKonfigPinjaman
         ];
         return view('roleAnggota.pengajuan', $data, compact('pinjaman'));
     }
     public function createPengajuan(Request $request)
     {
+        // Ambil konfigurasi terbaru dari database
+        $konfigurasi = KonfigurasiPinjaman::latest()->firstOrFail();
+
         // Cek apakah ada pengajuan yang masih 'Diproses'
         $pengajuanDiproses = Pinjaman::where('id_user', Auth::user()->id_user)
             ->where('keterangan', 'Diproses')
@@ -113,11 +119,23 @@ class AnggotaController extends Controller
         // Validasi data pengajuan
         $validatedData = $request->validate([
             'tgl_pengajuan' => 'required|date_format:Y-m-d H:i:s',
-            'besar_pinjaman' => 'required|integer|max:100000000',
-            'tenor_pinjaman' => 'required|integer|max:50',
+            'besar_pinjaman' => 'required|integer|min:500000|max:' . $konfigurasi->maks_pinjaman,
+            'tenor_pinjaman' => 'required|integer|min:3|max:' . $konfigurasi->maks_tenor,
+        ], [
+            'besar_pinjaman.required' => 'Besar pinjaman wajib diisi',
+            'besar_pinjaman.integer' => 'Besar pinjaman diisi dengan angka',
+            'besar_pinjaman.min' => 'Minimal besar pinjaman adalah Rp.500.000',
+            'besar_pinjaman.max' => 'Besar pinjaman tidak boleh lebih dari Rp ' . number_format($konfigurasi->maks_pinjaman, 0, ',', '.'),
+
+            'tenor_pinjaman.required' => 'Tenor pinjaman wajib diisi',
+            'tenor_pinjaman.integer' => 'Tenor pinjaman diisi dengan angka',
+            'tenor_pinjaman.min'=> 'Minimal tenor pinjaman adalah 3 bulan',
+            'tenor_pinjaman.max' => 'Tenor pinjaman tidak boleh lebih dari ' . $konfigurasi->maks_tenor . ' bulan',
         ]);
+
         $validatedData['id_user'] = Auth::user()->id_user;
         $validatedData['keterangan'] = 'Diproses';
+        $validatedData['bunga_pinjaman'] = $konfigurasi->bunga_pinjaman; // Simpan bunga saat pengajuan
 
         Pinjaman::create($validatedData);
 

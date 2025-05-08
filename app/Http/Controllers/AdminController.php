@@ -247,15 +247,18 @@ class AdminController extends Controller
 
     protected function createTanggungan($pinjaman)
     {
+        $konfig_bunga = KonfigurasiPinjaman::latest()->first();
+        $bunga_pinjaman = $konfig_bunga->bunga_pinjaman;
+
         $besar_pinjaman = $pinjaman->besar_pinjaman;
         // Bunga tahunan default
-        $bunga_bulanan = 0.08;
+        $bunga_bulanan = $bunga_pinjaman;
         // Jumlah cicilan
         $tenor = $pinjaman->tenor_pinjaman;
         //jumlah bunga
-        $jumlah_bunga = $besar_pinjaman * 0.08;
+        $jumlah_bunga = $besar_pinjaman * $bunga_pinjaman;
         //total pinjaman
-        $total_pembayaran = $besar_pinjaman + ($bunga_bulanan * $besar_pinjaman);
+        $total_pembayaran = $besar_pinjaman + $jumlah_bunga;
         //pembayaran bulanan
         $pembayaran_bulanan = $total_pembayaran / $tenor;
 

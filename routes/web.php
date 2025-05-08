@@ -48,9 +48,6 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::get('pengajuan', [AnggotaController::class, 'pengajuan'])->name('pengajuan.view');
     Route::post('pengajuan', [AnggotaController::class, 'createPengajuan'])->name('pengajuan.create');
 
-    Route::get('pencairanPinjaman', [AnggotaController::class, 'pencairanPinjaman'])->name('pencairanPinjaman.view');
-    Route::post('pengajuanPencairanPinjaman', [AnggotaController::class, 'buatPengajuanPencairanPinjaman'])->name('pencairanPinjaman.create');
-
     Route::get('/tanggungan', [AnggotaController::class, 'tanggungan'])->name('tanggungan.view');
     Route::post('/updatePinjamanLunas', [AnggotaController::class, 'updatePinjamanLunas'])->name('pinjamanLunas.update');
     Route::post('/updatePinjaman/{id_transaksiPinjaman}', [AnggotaController::class, 'updatePinjaman'])->name('pinjaman.update');
