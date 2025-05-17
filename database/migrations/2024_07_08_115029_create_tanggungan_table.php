@@ -17,13 +17,13 @@ return new class extends Migration
             $table->unsignedBigInteger('id_pinjaman');
             $table->foreign('id_pinjaman')->references('id_pinjaman')->on('pinjaman')->onDelete('cascade');
 
-            $table->float('bunga_pinjaman')->default(0.08);
-            $table->float('total_pinjaman');
-            $table->float('iuran_perBulan');
-            $table->float('sisa_pinjaman');
-            $table->float('sisa_tenor');
-            $table->string('status_pinjaman');
-            $table->string('snap_tokenLunas')->nullable();
+            $table->double('bunga_pinjaman');
+            $table->double('total_pinjaman');
+            $table->double('iuran_perBulan');
+            $table->double('sisa_pinjaman');
+            $table->double('sisa_tenor');
+            $table->enum('status_pinjaman', ['Lunas', 'Belum Lunas']);
+            $table->string('snap_tokenLunas', 40)->nullable();
             $table->timestamps();
         });
     }

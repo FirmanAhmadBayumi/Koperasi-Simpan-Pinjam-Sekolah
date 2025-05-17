@@ -13,7 +13,7 @@
                 <div class="container">
                     <div class="page-inner">
                         <div class="page-header">
-                            <h3 class="fw-bold mb-3">Konfigurasi Pinjaman</h3>
+                            <h3 class="fw-bold mb-3">Kelola Profil Sekolah</h3>
                             <ul class="breadcrumbs mb-3">
                                 <li class="nav-home">
                                     <a href="#">
@@ -24,7 +24,7 @@
                                     <i class="icon-arrow-right"></i>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#">Konfigurasi Pinjaman</a>
+                                    <a href="#">Kelola Profil Sekolah</a>
                                 </li>
                             </ul>
                         </div>
@@ -34,26 +34,26 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <button class="btn btn-primary btn-round justify-content-start" data-bs-toggle="modal"
-                                            data-bs-target="#konfigurasiPinjamanModal">
+                                            data-bs-target="#kelolaProfilSekolah">
                                             <i class="fa fa-plus"></i>
-                                            Konfigurasi Pinjaman
+                                            Kelola Profil Sekolah
                                         </button>
                                     </div>
-                                    
+
                                     <div class="card-body">
                                         <div class="table-responsive">
                                             <table id="add-row" class="display table table-striped table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>Bunga Pinjaman</th>
-                                                        <th>Maksimal Pinjaman</th>
-                                                        <th>Maksimal Tenor</th>
+                                                        <th>Logo</th>
+                                                        <th>Ikon</th>
+                                                        <th>Alamat Sekolah</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <td>{{ $konfigurasiPinjaman->bunga_pinjaman }}</td>
-                                                    <td>{{ $konfigurasiPinjaman->maks_pinjaman }}</td>
-                                                    <td>{{ $konfigurasiPinjaman->maks_tenor }}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
 
-                <div class="modal fade" id="konfigurasiPinjamanModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal fade" id="kelolaProfilSekolah" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header border-0">
@@ -73,33 +73,34 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="form-konfigurasi" method="POST" action="{{ route('konfigPinjaman.update') }}">
+                                <form id="form-profilSekolah" method="POST" action="">
                                     @csrf
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group form-group-default">
-                                                <label>Bunga Pinjaman (%)</label>
-                                                <input name="bunga_pinjaman" id="bungaPinjaman" type="text" class="form-control"
-                                                value="{{ old('bunga_pinjaman', $konfigurasiPinjaman->bunga_pinjaman) }}"/>
+                                                <label>Unggah Logo Sekolah</label>
+                                                <input name="bunga_pinjaman" id="bungaPinjaman" type="file"
+                                                    class="form-control"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group form-group-default">
-                                                <label>Maksimal Pinjaman (RP)</label>
-                                                <input name="maks_pinjaman" id="maksPinjaman" type="text" class="form-control" min="0"
-                                                value="{{ old('maks_pinjaman', $konfigurasiPinjaman->maks_pinjaman) }}"/>
+                                                <label>Unggah Ikon</label>
+                                                <input name="maks_pinjaman" id="maksPinjaman" type="file"
+                                                    class="form-control"/>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="form-group form-group-default">
-                                                <label>Maksimal Tenor (/Bulan)</label>
-                                                <input name="maks_tenor" id="maksTenor" type="text" class="form-control" min="0"
-                                                value="{{ old('maks_tenor', $konfigurasiPinjaman->maks_tenor) }}"/>
+                                                <label>Alamat Sekolah</label>
+                                                <textarea name="maks_tenor" id="maksTenor"
+                                                    class="form-control"></textarea>
                                             </div>
                                         </div>
                                         <div class="modal-footer border-0">
                                             <button type="submit" class="btn btn-primary">Simpan</button>
-                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
+                                            <button type="button" class="btn btn-danger"
+                                                data-bs-dismiss="modal">Batal</button>
                                         </div>
                                 </form>
                             </div>
@@ -133,66 +134,8 @@
             $("#basic-datatables").DataTable({});
             $("#add-row").DataTable({ pageLength: 1 });
 
-            $('#form-konfigurasi').on('submit', function (e) {
+            $('#form-profilSekolah').on('submit', function (e) {
                 e.preventDefault();
-
-                // const bungaInput = $('#bungaPinjaman').val();
-                // const decimalRegex = /^(0(\.\d{1,2})?|1(\.0{1,2})?)$/;
-                // const bungaValue = parseFloat(bungaInput);
-
-                // if (!decimalRegex.test(bungaInput) || bungaValue < 0 || bungaValue > 1) {
-                //     Swal.fire({
-                //         icon: 'error',
-                //         title: 'Format Bunga Salah',
-                //         html: 'Bunga pinjaman harus dalam format desimal (0.00 - 1.00).<br>Contoh: <b>0.05</b> (5%) atau <b>0.15</b> (15%).',
-                //         confirmButtonText: 'Mengerti'
-                //     });
-                //     return;
-                // }
-                
-                $.ajax({
-                    url: $(this).attr('action'),
-                    method: $(this).attr('method'),
-                    data: $(this).serialize(),
-                    success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: 'Konfigurasi pinjaman berhasil disimpan',
-                            timer: 2000,
-                            showConfirmButton: false
-                        }).then(() => {
-                            $('#konfigurasiPinjamanModal').modal('hide');
-                            location.reload(); // Optional: reload page if needed
-                        });
-                    },
-                    error: function (xhr) {
-                        if (xhr.status === 422) {
-                            // Validation error
-                            let errors = xhr.responseJSON.errors;
-                            let errorMessages = '';
-
-                            for (let field in errors) {
-                                errorMessages += errors[field].join('<br>') + '<br>';
-                            }
-
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Terjadi Kesalahan',
-                                html: errorMessages,
-                                confirmButtonText: 'Mengerti'
-                            });
-                        } else {
-                            // Other errors
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Terjadi kesalahan saat menyimpan data',
-                                confirmButtonText: 'Mengerti'
-                            });
-                        }
-                    }
-                });
             });
         });
     </script>

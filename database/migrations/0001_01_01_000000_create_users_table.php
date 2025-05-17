@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id('id_user')->onDelete('cascade');
-            $table->string('nama');
-            $table->string('email')->unique();
-            $table->string('NIP')->unique();
-            $table->string('jenis_kelamin');
-            $table->string('alamat');
-            $table->string('no_tlp');
-            $table->float('shu')->default(0);
-            $table->string('usertype');
+            $table->string('nama', 40);
+            $table->string('email', 40)->unique();
+            $table->string('NIP', 19)->unique();
+            $table->string('jenis_kelamin', 10);
+            $table->string('alamat', 100);
+            $table->string('no_tlp', 15);
+            $table->double('shu',)->default(0);
+            $table->enum('usertype', ['user', 'admin']);
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->string('password', 100);
+            $table->rememberToken();    
             $table->timestamps();
         });
 

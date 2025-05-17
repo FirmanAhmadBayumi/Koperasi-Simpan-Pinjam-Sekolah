@@ -41,8 +41,8 @@
                         <p>Data Anggota</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="">
+                <li class="{{ request()->is('profilSekolah') ? 'nav-item active' : 'nav-item'}}">
+                    <a href="/profilSekolah">
                         <i class="fas fa-school"></i>
                         <p>Kelola Profil Sekolah</p>
                     </a>

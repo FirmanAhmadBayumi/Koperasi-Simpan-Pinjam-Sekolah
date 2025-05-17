@@ -318,7 +318,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         // Initialize datatable
         $('#add-row').DataTable({
-            "pageLength": 2,
+            "pageLength": 25,
         });
 
         // Handle add button click

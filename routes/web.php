@@ -24,6 +24,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::patch('dataAnggota/update/{id_user}', [AdminController::class, 'updateUser'])->name('dataAnggota.update');
     Route::delete('dataAnggota/delete/{id_user}', [AdminController::class, 'destroyUser'])->name('dataAnggota.delete');
 
+    Route::get('profilSekolah', [AdminController::class, 'profilSekolah'])->name('profilSekolah');
+
     Route::get('konfigurasiPinjaman', [AdminController::class, 'konfigurasiPinjaman'])->name('konfigurasiPinjaman');
     Route::post('updateKonfigPinjaman', [AdminController::class, 'updateKonfigurasiPinjaman'])->name('konfigPinjaman.update');
 
@@ -34,10 +36,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/transaksi/{id}/update', [AdminController::class, 'updateTransaksiPokok'])->name('transaksi.update');
 
     Route::get('dataPinjaman', [AdminController::class, 'dataPinjaman']);
-    Route::post('updatePinjamanStatus/{id_pinjaman}', [AdminController::class, 'updatePinjamanStatus'])->name('pinjaman.updateStatus');
+    Route::post('updatePinjamanStatus/{id_pinjaman}', [AdminController::class, 'ubahStatusPinjaman'])->name('pinjaman.updateStatus');
 
     Route::get('transaksiSimpanan', [AdminController::class, 'viewTransaksiSimpanan'])->name('viewTransaksiSimpanan.view');
+    Route::get('transaksiSimpanan/detail/{user_id}', [AdminController::class, 'getDetailTransaksiSimpanan'])->name('simpanan.transaksi.detail');
+
     Route::get('transaksiPinjaman', [AdminController::class, 'viewTransaksiPinjaman'])->name('viewTransaksiPinjaman.view');
+    Route::get('transaksiPinjaman/detail/{user_id}', [AdminController::class, 'getDetailTransaksiPinjaman'])->name('pinjaman.transaksi.detail');
 });
 
 // Routes Role Anggota
