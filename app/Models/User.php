@@ -58,9 +58,9 @@ class User extends Authenticatable
         return $this->hasOne(KonfigurasiPinjaman::class, 'id_user');
     }
 
-    public function simpananPokok(): HasMany
+    public function simpananPokok():HasMany
     {
-        return $this->hasMany(SimpananPokok::class, 'id_simpanan_pokok');
+        return $this->hasMany(SimpananPokok::class, 'id_user');
     }
 
     public function pinjaman(): HasMany

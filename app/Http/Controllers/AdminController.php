@@ -7,17 +7,11 @@ use App\Models\Pinjaman;
 use App\Models\Tanggungan;
 use Illuminate\Http\Request;
 use App\Models\SimpananPokok;
-use App\Exports\ExportAnggota;
 use App\Models\TransaksiPokok;
-use App\Exports\ExportTanggungan;
-use App\Models\PencairanPinjaman;
 use App\Models\TransaksiPinjaman;
 use Illuminate\Support\Facades\DB;
 use App\Models\KonfigurasiPinjaman;
 use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ExportTransaksiPinjaman;
-use App\Exports\ExportTransaksiSimpanan;
 
 class AdminController extends Controller
 {
@@ -127,6 +121,14 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
+    }
+
+    public function profilSekolah(){
+        $data = [
+            'title' => 'Kelola Profil Sekolah'
+        ];
+
+        return view('roleAdmin.profilSekolah', $data);
     }
 
     public function konfigurasiPinjaman(){
@@ -323,8 +325,8 @@ class AdminController extends Controller
             }
         }
     }
-
-    public function updatePinjamanStatus(Request $request, $id_pinjaman)
+    
+    public function ubahStatusPinjaman(Request $request, $id_pinjaman)
     {
         DB::beginTransaction();
 
@@ -360,40 +362,87 @@ class AdminController extends Controller
         return view('roleAdmin.dataTanggungan', $data, compact('tanggungan'));
     }
 
-    public function viewTransaksiSimpanan(){
-        $transaksiPokok = TransaksiPokok::orderBy('id_transaksiPokok', 'asc')->get();
-
-        $data = [
-            'title' => 'Transaksi Simpanan'
-        ];
-
-        return view('roleAdmin.transaksiSimpanan', $data, compact('transaksiPokok'));
-    }
-
-    public function viewTransaksiPinjaman(){
-        $transaksiPinjaman = TransaksiPinjaman::orderBy('id_transaksiPinjaman', 'asc')->get();
-
-        $data = [
-            'title' => 'Transaksi Pinjaman'
-        ];
-
-        return view('roleAdmin.transaksiPinjaman', $data, compact('transaksiPinjaman'));
-    }
-
-    public function exportExcelAnggota(){
-        return Excel::download(new ExportAnggota, 'DataAnggota.xlsx');
-    }
-
-    public function exportExcelTransaksiSimpanan(){
-        return Excel::download(new ExportTransaksiSimpanan, 'TransaksiSimpanan.xlsx');
-    }
-
-    public function exportExcelTanggungan()
+    public function viewTransaksiPinjaman($user_id = null)
     {
-        return Excel::download(new ExportTanggungan, 'Tanggungan.xlsx');
+        // Query dasar untuk semua user dengan pinjaman
+        $users = User::with(['pinjaman.tanggungan.transaksiPinjaman'])
+            ->has('pinjaman')
+            ->get();
+
+        // Data untuk view
+        $data = [
+            'title' => 'Transaksi Pinjaman',
+            'users' => $users
+        ];
+
+        // Jika ada parameter user_id, tampilkan detail user tersebut
+        if ($user_id) {
+            $detailUser = User::with(['pinjaman.tanggungan.transaksiPinjaman' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+                ->findOrFail($user_id);
+
+            $data['detailUser'] = $detailUser;
+        }
+
+        return view('roleAdmin.transaksiPinjaman', $data);
     }
 
-    public function exportExcelTransaksiPinjaman(){
-        return Excel::download(new ExportTransaksiPinjaman, 'TransaksiPinjaman.xlsx');
+    public function getDetailTransaksiPinjaman($user_id)
+    {
+        $user = User::with(['pinjaman.tanggungan.transaksiPinjaman'])->findOrFail($user_id);
+
+        $tanggunganData = $user->pinjaman->flatMap(function ($pinjaman) {
+            return collect($pinjaman->tanggungan)->map(function ($tanggungan) {
+                return [
+                    'total_pinjaman' => $tanggungan->total_pinjaman,
+                    'angsuran' => $tanggungan->iuran_perBulan,
+                    'keterangan' => $tanggungan->status_pinjaman,
+                    'transaksi' => $tanggungan->transaksiPinjaman->map(function ($transaksi) {
+                        return [
+                            'jatuh_tempo' => $transaksi->jatuh_tempo ?? '-',
+                            'tanggal_pembayaran' => $transaksi->tanggal_pembayaran ?? '-',
+                            'status_transaksi' => $transaksi->keterangan ?? '-',
+                        ];
+                    }),
+                ];
+            });
+        });
+
+        return response()->json($tanggunganData);
+    }
+
+
+    public function viewTransaksiSimpanan()
+    {
+    $transaksiPokok = User::with(['simpananPokok.transaksiPokok'])
+        ->has('simpananPokok')
+        ->get();
+
+        $data =[
+            'title' => 'Transaksi Simpanan',
+            'transaksiPokok' => $transaksiPokok,
+        ];
+
+    return view('roleAdmin.transaksiSimpanan', $data);
+    }
+
+    public function getDetailTransaksiSimpanan($user_id)
+    {
+        $user = User::with(['simpananPokok.transaksiPokok.simpananPokok'])->findOrFail($user_id);
+
+        // Ambil semua transaksi_pokok dari seluruh simpanan_pokok user
+        $transaksi = $user->simpananPokok->flatMap(function ($simpanan) {
+            return $simpanan->transaksiPokok;
+        })->map(function ($transaksi) {
+            return [
+                'iuran' => $transaksi->simpananPokok->iuran ?? null,
+                'jatuh_tempo' => $transaksi->jatuh_tempo,
+                'tanggal_pembayaran' => $transaksi->tanggal_pembayaran,
+                'keterangan' => $transaksi->keterangan,
+            ];
+        });
+
+        return response()->json($transaksi);
     }
 }

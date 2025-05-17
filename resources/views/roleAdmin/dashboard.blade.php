@@ -80,7 +80,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="card-title">Grafik Keuangan Koperasi</div>
@@ -90,78 +90,6 @@
                                             <canvas id="multipleLineChart"></canvas>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card card-round"
-                                    style="height: 395px; position: relative; overflow: hidden;">
-                                    <div style="height: 100%; width: 100%; 
-                                    background-image: url('assets/img/weather/bg-cuaca.jpg'); 
-                                    background-size: cover; 
-                                    position: absolute; 
-                                    top: 0; 
-                                    left: 0; 
-                                    filter: blur(1px); 
-                                    z-index: 1;">
-                                    </div>
-                                    <div style="position: relative; z-index: 2; padding: 15px;">
-                                        <div class="card-header" style="padding-bottom: 0;">
-                                            <div class="card-head-row">
-                                                <div class="card-title">
-                                                    <h6 id="currentDate"></h6>
-                                                    <h3>Kota Bandar Lampung</h3>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="card-body text-center" style="padding-top: 15px;">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <img id="weatherIcon" alt="Weather Icon" style="width:150px;" />
-                                                <div class="text-left" style="margin-left: 15px;">
-                                                    <h1 id="temperature"></h1>
-                                                    <h3 id="weatherDescription" class="text-center"></h3>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex flex-column align-items-center justify-content-center"
-                                                style="padding-top: 20px;">
-                                                <div class="d-flex justify-content-between" style="width: 250px;">
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="assets/img/weather/humidity.png" alt=""
-                                                            style="width:40px;">
-                                                        <div class="d-flex flex-column align-items-center"
-                                                            style="margin-left: 5px;">
-                                                            <h5 id="weatherHumidity" class="text-center"
-                                                                style="margin: 0;"></h5>
-                                                            <p class="text-center" style="margin: 0;">Humidity</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="assets/img/weather/wind.png" alt=""
-                                                            style="width:40px;">
-                                                        <div class="d-flex flex-column align-items-center"
-                                                            style="margin-left: 5px;">
-                                                            <h5 id="weatherWind" class="text-center" style="margin: 0;">
-                                                            </h5>
-                                                            <p class="text-center" style="margin: 0;">Wind</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="card-title">Lokasi Koperasi</div>
-                                    <p>SMKN 2 Bandar Lampung</p>
-                                </div>
-                                <div class="card-body">
-                                    <iframe
-                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1364.4547130584026!2d105.24535378298933!3d-5.364128239866796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40c535b64632bb%3A0x7774722ca7fc4461!2sSMK%20Negeri%202%20Bandar%20Lampung!5e0!3m2!1sid!2sid!4v1720033567049!5m2!1sid!2sid"
-                                        width="600" height="450" style="border: 0; width: 100%" allowfullscreen=""
-                                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                                 </div>
                             </div>
                         </div>

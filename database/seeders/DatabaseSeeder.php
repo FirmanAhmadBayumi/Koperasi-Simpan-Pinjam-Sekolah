@@ -10,6 +10,7 @@ use App\Models\SimpananPokok;
 use App\Models\TransaksiPokok;
 use Illuminate\Database\Seeder;
 use App\Models\TransaksiPinjaman;
+use App\Models\KonfigurasiPinjaman;
 
 class DatabaseSeeder extends Seeder
 {
@@ -32,11 +33,21 @@ class DatabaseSeeder extends Seeder
         // });
 
         // Buat 1 pengguna dengan role "admin"
-        User::factory()->admin()->create([
+        $admin = User::factory()->admin()->create([
             'email' => 'admin@example.com',
         ]);
 
         // Buat 5 pengguna dengan role "user"
-        User::factory()->count(5)->create();
+        User::factory()->count(2)->create();
+
+        // Buat konfigurasi default
+        KonfigurasiPinjaman::firstOrCreate(
+            ['id_user' => $admin->id_user],
+            [
+                'bunga_pinjaman' => 0.08,
+                'maks_pinjaman' => 100000000,
+                'maks_tenor' => 12
+            ]
+        );
     }
 }

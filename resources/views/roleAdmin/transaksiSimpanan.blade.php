@@ -39,31 +39,68 @@
                                                 <tr>
                                                     <th>No.</th>
                                                     <th>Nama</th>
-                                                    <th>Total Pembayaran</th>
-                                                    <th>Jatuh Tempo</th>
-                                                    <th>Tanggal Pembayaran</th>
-                                                    <th>Keterangan</th>
+                                                    <th>NIP</th>
+                                                    <th>Total Simpanan Pokok</th>
+                                                    <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($transaksiPokok as $tk)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $tk->simpananPokok->user->nama }}</td>
-                                                    <td>{{ 'Rp. ' . number_format($tk->simpananPokok->iuran, 0, ',', '.') }}</td>
-                                                    <td>{{ $tk->jatuh_tempo }}</td>
-                                                    <td>{{ $tk->tanggal_pembayaran }}</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-between">
-                                                            <button
-                                                                class="btn btn-{{ $tk->keterangan == 'Belum Lunas' ? 'danger' : 'success' }}"
-                                                                disabled>
-                                                                {{ $tk->keterangan }}
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $tk->nama }}</td>
+                                                        <td>{{ $tk->NIP }}</td>
+                                                        <td>{{ $tk->simpananPokok->sum('total_simpanan') }}</td>
+                                                        <td>
+                                                            <a href="#" class="btn btn-warning btn-detail-transaksi" 
+                                                                data-nama="{{ $tk->nama }}" 
+                                                                data-nip="{{ $tk->NIP }}"
+                                                                data-id="{{ $tk->id_user }}">
+                                                                Detail Transaksi
+                                                            </a>
+                                                        </td>
+                                                    </tr>
                                                 @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="detailTransaksiSimpanan" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-xl" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header border-0">
+                                    <h5 class="modal-title w-100 text-center fs-2">Detail Transaksi Simpanan</h5>
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="d-flex justify-content-between w-100 px-3 mt-3">
+                                    <div class="me-4">
+                                        <span class="fw-semibold fs-5">Nama:</span>
+                                        <span id="detailNama" class="fs-5"></span>
+                                    </div>
+                                    <div>
+                                        <span class="fw-semibold fs-5">NIP:</span>
+                                        <span id="detailNIP" class="fs-5"></span>
+                                    </div>
+                                </div>
+                                <div class="modal-body mt-5">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Iuran/Bulan</th>
+                                                    <th>Jatuh Tempo</th>
+                                                    <th>Tanggal Pembayaran</th>
+                                                    <th>Status Transaksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="detailTransaksiBody">
+                                                
                                             </tbody>
                                         </table>
                                     </div>
@@ -99,6 +136,52 @@
             // Add Row
             $("#add-row").DataTable({
                 pageLength: 25,
+            });
+
+            // Tombol detail transaksi klik handler
+            $('.btn-detail-transaksi').on('click', function (e) {
+                e.preventDefault();
+
+                const nama = $(this).data('nama');
+                const nip = $(this).data('nip');
+                const id = $(this).data('id');
+
+                $('#detailNama').text(nama);
+                $('#detailNIP').text(nip);
+
+                // Clear table body
+                $('#detailTransaksiBody').html('<tr><td colspan="5" class="text-center">Loading...</td></tr>');
+
+                // Show modal
+                $('#detailTransaksiSimpanan').modal('show');
+
+                // AJAX call to get detail data
+                $.ajax({
+                    url: `transaksiSimpanan/detail/${id}`,
+                    type: 'GET',
+                    success: function (data) {
+                        let rows = '';
+                        if (data.length > 0) {
+                            data.forEach((item, index) => {
+                                rows += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.iuran ?? '-'}</td>
+                            <td>${item.jatuh_tempo ?? '-'}</td>
+                            <td>${item.tanggal_pembayaran ?? '-'}</td>
+                            <td>${item.keterangan ?? '-'}</td>
+                        </tr>`;
+                            });
+                        } else {
+                            rows = `<tr><td colspan="5" class="text-center">Tidak ada data transaksi.</td></tr>`;
+                        }
+
+                        $('#detailTransaksiBody').html(rows);
+                    },
+                    error: function () {
+                        $('#detailTransaksiBody').html('<tr><td colspan="5" class="text-danger text-center">Gagal memuat data.</td></tr>');
+                    }
+                });
             });
         });
     </script>

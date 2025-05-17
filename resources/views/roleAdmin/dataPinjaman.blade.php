@@ -180,8 +180,7 @@
                         Swal.close(); // Close the loading alert
                         Swal.fire({
                             title: "Gagal memperbarui status",
-                            text: response.responseJSON.message ||
-                                'Terjadi kesalahan saat memproses permintaan.',
+                            text: 'Terjadi kesalahan saat memproses permintaan.',
                             icon: 'error'
                         });
                         form.find('button[type="submit"]').prop('disabled', false);

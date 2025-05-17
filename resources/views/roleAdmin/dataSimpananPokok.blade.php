@@ -44,7 +44,6 @@
                                                     <th>No.</th>
                                                     <th>Nama</th>
                                                     <th>Iuran</th>
-                                                    <th>Total Simpanan</th>
                                                     <th>Status Simpanan</th>
                                                 </tr>
                                             </thead>
@@ -54,7 +53,6 @@
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $simp->user->nama }}</td>
                                                         <td>{{ 'Rp. ' . number_format($simp->iuran, 0, ',', '.') }}</td>
-                                                        <td>{{ 'Rp. ' . number_format($simp->total_simpanan, 0, ',', '.') }}
                                                         </td>
                                                         <td>
                                                             <div class="d-flex justify-content-between">
