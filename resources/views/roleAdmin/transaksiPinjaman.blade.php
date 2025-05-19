@@ -32,6 +32,13 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card">
+                                    <div class="card-header">
+                                        <div class="d-flex align-items-center">
+                                            <a href="{{ route('laporan.pinjaman.eksporPDF') }}" class="btn btn-danger mb-3 ms-auto">
+                                                <i class="fa fa-file-pdf"></i> Ekspor PDF 
+                                            </a>
+                                        </div>
+                                    </div>                                    
                                     <div class="card-body">
                                         <div class="table-responsive">
                                             <table id="add-row" class="display table table-striped table-hover">

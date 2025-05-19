@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('NIP', 19)->unique();
             $table->string('jenis_kelamin', 10);
             $table->string('alamat', 100);
-            $table->string('no_tlp', 15);
+            $table->string('no_tlp', 20);
             $table->double('shu',)->default(0);
             $table->enum('usertype', ['user', 'admin']);
             $table->timestamp('email_verified_at')->nullable();

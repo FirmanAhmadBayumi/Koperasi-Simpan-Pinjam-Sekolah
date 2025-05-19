@@ -34,7 +34,7 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="d-flex align-items-center">
-                                            <button class="btn btn-primary btn-round justify-content-start"
+                                            <button class="btn btn-primary btn-round ms-auto"
                                                 data-bs-toggle="modal" data-bs-target="#addAnggotaModal">
                                                 <i class="fa fa-plus"></i>
                                                 Tambah Anggota

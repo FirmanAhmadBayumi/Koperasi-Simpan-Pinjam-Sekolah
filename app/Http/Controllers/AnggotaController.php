@@ -322,6 +322,19 @@ class AnggotaController extends Controller
     }
 
     // ----------------------------------- DATA TRANSAKSI -------------------------------------
+    public function viewTransaksiPinjaman()
+    {
+        $transaksiPinjaman = TransaksiPinjaman::with('tanggungan.pinjaman.user')
+            ->whereHas('tanggungan.pinjaman', function ($query) {
+                $query->where('id_user', Auth::user()->id_user);
+            })->where('keterangan', 'Lunas')->get();
+
+        $data = [
+            'title' => 'Transaksi Simpanan'
+        ];
+
+        return view('roleAnggota.transaksiPinjaman', $data, compact('transaksiPinjaman'));
+    }
     public function viewTransaksiSimpanan()
     {
         $transaksiPokok = TransaksiPokok::with('simpananPokok.user')
@@ -337,20 +350,6 @@ class AnggotaController extends Controller
         return view('roleAnggota.transaksiSimpanan', $data, compact('transaksiPokok'));
     }
 
-    public function viewTransaksiPinjaman()
-    {
-        $transaksiPinjaman = TransaksiPinjaman::with('tanggungan.pinjaman.user')
-            ->whereHas('tanggungan.pinjaman', function ($query) {
-                $query->where('id_user', Auth::user()->id_user);
-            })->where('keterangan', 'Lunas')->get();
-
-        $data = [
-            'title' => 'Transaksi Simpanan'
-        ];
-
-        return view('roleAnggota.transaksiPinjaman', $data, compact('transaksiPinjaman'));
-    }
-
     // --------------------------------------- PROFILE ----------------------------------------
     public function viewUser(Request $request): View
     {
@@ -361,17 +360,16 @@ class AnggotaController extends Controller
             'user' => $request->user()
         ]);
     }
-    public function updateUser(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+    public function updateUser(ProfileUpdateRequest $request): RedirectResponse{
+            $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+            if ($request->user()->isDirty('email')) {
+                $request->user()->email_verified_at = null;
+            }
 
-        $request->user()->save();
+            $request->user()->save();
 
-        return Redirect::route('profile.view')->with('status', 'profile-updated');
+            return Redirect::route('profile.view')->with('status', 'profile-updated');
     }
     public function updatePassword(Request $request): RedirectResponse
     {

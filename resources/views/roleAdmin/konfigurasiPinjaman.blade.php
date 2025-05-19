@@ -33,11 +33,13 @@
                             <div class="col-md-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <button class="btn btn-primary btn-round justify-content-start" data-bs-toggle="modal"
-                                            data-bs-target="#konfigurasiPinjamanModal">
-                                            <i class="fa fa-plus"></i>
-                                            Konfigurasi Pinjaman
-                                        </button>
+                                        <div class="d-flex align-items-center">
+                                            <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
+                                                data-bs-target="#konfigurasiPinjamanModal">
+                                                <i class="fa fa-plus"></i>
+                                                Konfigurasi Pinjaman
+                                            </button>
+                                        </div>
                                     </div>
                                     
                                     <div class="card-body">

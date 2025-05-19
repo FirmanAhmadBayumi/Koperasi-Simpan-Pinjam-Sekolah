@@ -32,6 +32,13 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
+                                <div class="card-header">
+                                    <div class="d-flex align-items-center">
+                                        <a href="{{ route('laporan.simpanan.eksporPDF') }}" class="btn btn-danger mb-3 ms-auto">
+                                            <i class="fa fa-file-pdf"></i> Ekspor PDF
+                                        </a>
+                                    </div>
+                                </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table id="add-row" class="display table table-striped table-hover">
@@ -93,7 +100,7 @@
                                             <thead class="table-light">
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Iuran/Bulan</th>
+                                                    <th>Total Pembayaran</th>
                                                     <th>Jatuh Tempo</th>
                                                     <th>Tanggal Pembayaran</th>
                                                     <th>Status Transaksi</th>

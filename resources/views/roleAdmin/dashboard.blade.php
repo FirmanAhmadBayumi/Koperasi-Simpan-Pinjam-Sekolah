@@ -137,115 +137,12 @@
         <script src="assets/js/setting-demo.js"></script>
         <script src="assets/js/demo.js"></script>
         <script>
-            function translateWeatherDescription(description) {
-                const translations = {
-                    'clear sky': 'cerah',
-                    'partly sunny': 'sebagian cerah',
-                    'scattered clouds': 'berawan',
-                    'partly cloudy': 'sebagian berawan',
-                    'broken clouds': 'berawan tebal',
-                    'overcast clouds': 'mendung',
-                    'light rain': 'gerimis',
-                    'rain': 'hujan',
-                    'shower rain': 'hujan ringan',
-                    'heavy rain': 'hujan lebat',
-                    'thunderstorm': 'badai',
-                    'mist': 'kabut',
-                    'haze': 'berkabut asap',
-                    'fog': 'kabut tebal',
-                    'few clouds': 'sedikit awan'
-                };
-
-                // Mengubah deskripsi menjadi huruf kecil dan menerjemahkannya
-                const lowerCaseDescription = description.toLowerCase();
-                return translations[lowerCaseDescription] || description;
-            }
-
-            function getCustomIcon(description) {
-                const iconMapping = {
-                    'cerah': 'assets/img/weather/clear-sky.png',
-                    'sebagian cerah': 'assets/img/weather/partly-sunny.png',
-                    'berawan': 'assets/img/weather/scattered-clouds.png',
-                    'sebagian berawan': 'assets/img/weather/partly-cloudy.png',
-                    'berawan tebal': 'assets/img/weather/broken-cloud.png',
-                    'mendung': 'assets/img/weather/overcast.png',
-                    'gerimis': 'assets/img/weather/light-rain.png',
-                    'hujan': 'assets/img/weather/rain.png',
-                    'hujan ringan': 'assets/img/weather/shower-rain.png',
-                    'hujan lebat': 'assets/img/weather/heavy-rain.png',
-                    'badai': 'assets/img/weather/thunderstorm.png',
-                    'kabut': 'assets/img/weather/mist.png',
-                    'berkabut asap': 'assets/img/weather/haze.png',
-                    'kabut tebal': 'assets/img/weather/fog.png',
-                    'sedikit awan': 'assets/img/weather/few-clouds.png',
-                };
-                return iconMapping[description] || 'default-icon.png';
-            }
-
-            function fetchWeatherData() {
-                const apiKey = '98740f4ebc0d63bc0f8ba70090e5a091';
-                const city = 'Bandar Lampung';
-                const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-
-                fetch(apiUrl)
-                    .then(response => response.json())
-                    .then(data => {
-                        const weatherIconElement = document.getElementById('weatherIcon');
-                        const temperatureElement = document.getElementById('temperature');
-                        const weatherDescriptionElement = document.getElementById('weatherDescription');
-                        const weatherHumidityElement = document.getElementById('weatherHumidity');
-                        const weatherWindElement = document.getElementById('weatherWind');
-
-                        const temperature = data.main.temp;
-                        const translatedDescription = translateWeatherDescription(data.weather[0].description.toLowerCase());
-                        const weatherHumidity = data.main.humidity;
-                        const weatherWind = data.wind.speed;
-                        const customIcon = getCustomIcon(translatedDescription);
-
-                        weatherIconElement.src = customIcon;
-                        temperatureElement.innerHTML = `${parseInt(temperature)}°C`;
-                        weatherDescriptionElement.innerHTML = translatedDescription;
-                        weatherHumidityElement.innerHTML = `${weatherHumidity}%`;
-                        weatherWindElement.innerHTML = `${parseInt(weatherWind)}Km/h`;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching weather data:', error);
-                    });
-            }
-            fetchWeatherData();
-
-            function updateDateTime() {
-                const now = new Date();
-
-                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-                const months = [
-                    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-                    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-                ];
-
-                const dayName = days[now.getDay()];
-                const day = now.getDate();
-                const month = months[now.getMonth()];
-                const year = now.getFullYear();
-
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
-
-                const currentDate = `${day} ${month}, ${hours}:${minutes} WIB`;
-                document.getElementById('currentDate').textContent = currentDate;
-            }
 
             function capitalizeFirstLetter(string) {
                 return string.charAt(0).toUpperCase() + string.slice(1);
             }
 
             document.addEventListener('DOMContentLoaded', function () {
-                // Fetch weather data from an API
-                fetchWeatherData();
-
-                // Update the date and time every second
-                setInterval(updateDateTime, 1000);
 
                 // Fetch data untuk Multiple Line Chart
                 var ctx = document.getElementById("multipleLineChart").getContext("2d");
