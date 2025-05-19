@@ -33,9 +33,9 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <div class="card-title">Profile Information</div>
+                                    <div class="card-title">Profil</div>
                                     <p style="width: 500px; text-align: justify;">
-                                        Update your account's profile information.
+                                        Ubah Profil
                                     </p>
                                 </div>
                                 <div class="card-body">
@@ -57,10 +57,7 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <div class="card-title">Update Password</div>
-                                    <p style="width: 500px; text-align: justify;">
-                                        Ensure your account is using a long, random password to stay secure.
-                                    </p>
+                                    <div class="card-title">Ubah Kata Sandi</div>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">

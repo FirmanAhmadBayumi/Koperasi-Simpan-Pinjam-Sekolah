@@ -16,7 +16,6 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'alamat' => ['required', 'string', 'max:255'],
             'no_tlp' => ['required', 'digits_between:1,15'],
         ];
@@ -30,12 +29,6 @@ class ProfileUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'Email wajib diisi.',
-            'email.string' => 'Email harus berupa string.',
-            'email.lowercase' => 'Email harus menggunakan huruf kecil.',
-            'email.email' => 'Email harus berupa alamat email yang valid.',
-            'email.max' => 'Email tidak boleh lebih dari 255 karakter.',
-
             'alamat.required' => 'Alamat wajib diisi.',
             'alamat.string' => 'Alamat harus berupa string.',
             'alamat.max' => 'Alamat tidak boleh lebih dari 255 karakter.',

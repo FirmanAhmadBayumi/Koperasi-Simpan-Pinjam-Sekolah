@@ -10,14 +10,15 @@
         <div class="mb-3">
             <x-input-label class="form-label" for="nama" :value="__('Nama')" />
             <x-text-input id="nama" name="nama_display" type="text" class="form-control" value="{{ old('nama', $user->nama) }}"
-                required autofocus autocomplete="nama" style="width: 600px;" disabled />
+                required autofocus autocomplete="nama" style="width: 600px;" />
             <input type="hidden" name="nama" value="{{ old('nama', $user->nama) }}" />
             <x-input-error class="mt-2" :messages="$errors->get('nama')" />
         </div>
 
         <div class="mb-3">
             <x-input-label class="form-label" for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="form-control" :value="old('email', $user->email)" autofocus autocomplete="username" style="width: 600px;" />
+            <x-text-input id="email" name="email" type="email" class="form-control" :value="old('email', $user->email)" 
+                autofocus autocomplete="username" style="width: 600px;" disabled/>
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
@@ -43,7 +44,7 @@
         <div class="mb-3">
             <x-input-label class="form-label" for="NIP" :value="__('NIP')" />
             <x-text-input id="NIP" name="nama_display" type="text" class="form-control" value="{{ old('NIP', $user->NIP) }}"
-                required autofocus autocomplete="NIP" style="width: 600px;" disabled />
+                required autofocus autocomplete="NIP" style="width: 600px;"  disabled/>
             <input type="hidden" name="NIP" value="{{ old('NIP', $user->NIP) }}" />
             <x-input-error class="mt-2" :messages="$errors->get('NIP')" />
         </div>
@@ -51,7 +52,7 @@
         <div class="mb-3">
             <x-input-label class="form-label" for="jenis_kelamin" :value="__('Jenis Kelamin')" />
             <x-text-input id="jenis_kelamin" name="nama_display" type="text" class="form-control" value="{{ old('jenis_kelamin', $user->jenis_kelamin) }}"
-                required autofocus autocomplete="jenis_kelamin" style="width: 600px;" disabled />
+                required autofocus autocomplete="jenis_kelamin" style="width: 600px;"  />
             <input type="hidden" name="jenis_kelamin" value="{{ old('jenis_kelamin', $user->jenis_kelamin) }}" />
             <x-input-error class="mt-2" :messages="$errors->get('jenis_kelamin')" />
         </div>
@@ -71,7 +72,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button class="btn btn-primary mt-2">{{ __('Save') }}</x-primary-button>
+            <x-primary-button class="btn btn-primary mt-2">{{ __('Simpan') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"

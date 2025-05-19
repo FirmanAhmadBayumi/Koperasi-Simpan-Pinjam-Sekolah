@@ -8,7 +8,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 require __DIR__ . '/auth.php';
 
 Route::get('/', function () {
-    return view('auth.login',  ['title' => 'Login']);
+    return redirect()->route('login');;
 })->middleware('guest');
 
 // Routes Role Admin
@@ -43,6 +43,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('transaksiPinjaman', [AdminController::class, 'viewTransaksiPinjaman'])->name('viewTransaksiPinjaman.view');
     Route::get('transaksiPinjaman/detail/{user_id}', [AdminController::class, 'getDetailTransaksiPinjaman'])->name('pinjaman.transaksi.detail');
+
+    Route::get('/laporanPinjaman/eksporPDF', [AdminController::class, 'eksporPDFPinjaman'])->name('laporan.pinjaman.eksporPDF');
+    Route::get('/laporanSimpanan/eksporPDF', [AdminController::class, 'eksporPDFSimpanan'])->name('laporan.simpanan.eksporPDF');
 });
 
 // Routes Role Anggota

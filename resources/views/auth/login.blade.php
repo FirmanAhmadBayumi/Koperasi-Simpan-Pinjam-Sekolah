@@ -4,7 +4,7 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <body
-        style="background-image: url(assets/img/kaiadmin/bg-login.jpg); background-repeat: no-repeat; background-size: cover; background-position: center;">
+        style="background-color: #363535;">
         <div id="layoutAuthentication" class="d-flex align-items-center justify-content-center min-vh-100">
             <div id="layoutAuthentication_content" class="w-100 position-relative">
                 <main>
@@ -23,7 +23,7 @@
                                             <div class="form-floating mb-3">
                                                 <x-text-input class="form-control" id="email" type="email" 
                                                     name="email" :value="old('email')" placeholder="name@example.com" required autofocus autocomplete="username" />
-                                                <label for="email">Email address</label>
+                                                <label for="email">Alamat Email</label>
                                                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
                                             </div>
 
@@ -31,7 +31,7 @@
                                             <div class="form-floating mb-3">
                                                 <x-text-input id="password" class="form-control" type="password"
                                                     name="password" placeholder="Password" required autocomplete="current-password" />
-                                                <label for="password">Password</label>
+                                                <label for="password">Kata Sandi</label>
                                                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                             </div>
 

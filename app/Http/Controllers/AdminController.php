@@ -12,6 +12,7 @@ use App\Models\TransaksiPinjaman;
 use Illuminate\Support\Facades\DB;
 use App\Models\KonfigurasiPinjaman;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminController extends Controller
 {
@@ -120,6 +121,17 @@ class AdminController extends Controller
             return response()->json(['success' => true, 'message' => 'Data anggota berhasil diperbarui.']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    public function destroyUser(Request $request, $id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+            return response()->json(['success' => 'Anggota berhasil dihapus.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal menghapus anggota.'], 500);
         }
     }
 
@@ -412,7 +424,6 @@ class AdminController extends Controller
         return response()->json($tanggunganData);
     }
 
-
     public function viewTransaksiSimpanan()
     {
     $transaksiPokok = User::with(['simpananPokok.transaksiPokok'])
@@ -444,5 +455,27 @@ class AdminController extends Controller
         });
 
         return response()->json($transaksi);
+    }
+
+    public function eksporPDFPinjaman()
+    {
+        // Ambil semua user yang punya pinjaman dan transaksinya
+        $users = User::with(['pinjaman.tanggungan.transaksiPinjaman'])
+            ->has('pinjaman')
+            ->get();
+
+        // Kirim ke view PDF
+        $pdf = Pdf::loadView('roleAdmin.laporanPinjamanPDF', [
+            'users' => $users
+        ])->setPaper('A4', 'landscape'); // agar lebih lebar
+
+        return $pdf->download('Laporan-Pinjaman-Anggota.pdf');
+    }
+
+    public function eksporPDFSimpanan()
+    {
+        $users = User::with('simpananPokok')->get(); // pastikan relasi simpanan tersedia
+        $pdf = PDF::loadView('roleAdmin.laporanSimpananPDF', compact('users'))->setPaper('A4', 'portrait');
+        return $pdf->download('Laporan-Simpanan-Anggota.pdf');
     }
 }
