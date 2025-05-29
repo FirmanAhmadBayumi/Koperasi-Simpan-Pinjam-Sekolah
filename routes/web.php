@@ -25,6 +25,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('dataAnggota/delete/{id_user}', [AdminController::class, 'destroyUser'])->name('dataAnggota.delete');
 
     Route::get('profilSekolah', [AdminController::class, 'profilSekolah'])->name('profilSekolah');
+    Route::post('profilSekolah/store', [AdminController::class, 'profilSekolahStore'])->name('profilSekolah.store');
 
     Route::get('konfigurasiPinjaman', [AdminController::class, 'konfigurasiPinjaman'])->name('konfigurasiPinjaman');
     Route::post('updateKonfigPinjaman', [AdminController::class, 'updateKonfigurasiPinjaman'])->name('konfigPinjaman.update');

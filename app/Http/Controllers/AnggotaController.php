@@ -360,16 +360,32 @@ class AnggotaController extends Controller
             'user' => $request->user()
         ]);
     }
-    public function updateUser(ProfileUpdateRequest $request): RedirectResponse{
-            $request->user()->fill($request->validated());
+    public function updateUser(Request $request): RedirectResponse
+    {
+        $messages = [
+            'nama.required' => 'Nama wajib diisi.',
+            'nama.string' => 'Nama harus berupa teks.',
+            'nama.max' => 'Nama maksimal 255 karakter.',
 
-            if ($request->user()->isDirty('email')) {
-                $request->user()->email_verified_at = null;
-            }
+            'jenis_kelamin.required' => 'Jenis kelamin wajib diisi.',
+            'jenis_kelamin.string' => 'Jenis kelamin harus berupa teks.',
 
-            $request->user()->save();
+            'alamat.string' => 'Alamat harus berupa teks.',
 
-            return Redirect::route('profile.view')->with('status', 'profile-updated');
+            'no_tlp.string' => 'Nomor telepon harus berupa teks.',
+            'no_tlp.max' => 'Nomor telepon maksimal 20 karakter.',
+        ];
+
+        $validated = $request->validate([
+            'nama' => ['required', 'string', 'max:255'],
+            'jenis_kelamin' => ['required', 'string'],
+            'alamat' => ['nullable', 'string'],
+            'no_tlp' => ['nullable', 'string', 'max:20'],
+        ], $messages);
+
+        $request->user()->update($validated);
+
+        return Redirect::route('profile.view')->with('status', 'profile-updated');
     }
     public function updatePassword(Request $request): RedirectResponse
     {

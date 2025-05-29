@@ -60,7 +60,8 @@
 
     <div class="header">
         <h2>KOPERASI SIMPAN PINJAM SEKOLAH</h2>
-        <h3>Alamat: Jl. Pendidikan No. 123, Kota Pendidikan</h3>
+        <h3>{{ $profilSekolah->nama_sekolah }}</h3>
+        <h3>{{ $profilSekolah->alamat_sekolah }}</h3>
         <h3><u>LAPORAN PINJAMAN ANGGOTA</u></h3>
     </div>
 
@@ -81,9 +82,9 @@
                 @php $totalPinjamanUser = $user->pinjaman->count(); @endphp
                 @foreach($user->pinjaman as $index => $pinjaman)
                                 @php
-                    $tanggungan = $pinjaman->tanggungan->first();
-                    $totalPinjaman = $tanggungan->total_pinjaman ?? '-';
-                    $statusPinjaman = $tanggungan->status_pinjaman ?? '-';
+                                    $tanggungan = $pinjaman->tanggungan->first();
+                                    $totalPinjaman = $tanggungan->total_pinjaman ?? '-';
+                                    $statusPinjaman = $tanggungan->status_pinjaman ?? '-';
                                 @endphp
                                 <tr>
                                     @if($index === 0)

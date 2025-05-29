@@ -59,8 +59,9 @@
 <body>
 
     <div class="header">
-        <h2>KOPERASI SIMPAN PINJAM SEKOLAH</h2>
-        <h3>Alamat: Jl. Pendidikan No. 123, Kota Pendidikan</h3>
+        <h2 class="mb-3">KOPERASI SIMPAN PINJAM SEKOLAH</h2>
+        <h3>{{ $profilSekolah->nama_sekolah }}</h3>
+        <h3>{{ $profilSekolah->alamat_sekolah }}</h3>
         <h3><u>LAPORAN Simpanan ANGGOTA</u></h3>
     </div>
 

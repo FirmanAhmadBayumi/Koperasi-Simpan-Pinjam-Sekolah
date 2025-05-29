@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\TransaksiPokok;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\TransaksiPokokObserver;
 
@@ -21,5 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        View::composer('*', function ($view) {
+            $profil = DB::table('profil_sekolah')->latest()->first();
+            $view->with('profil', $profil);
+        });
     }
 }

@@ -11,6 +11,7 @@ use App\Models\TransaksiPokok;
 use App\Models\TransaksiPinjaman;
 use Illuminate\Support\Facades\DB;
 use App\Models\KonfigurasiPinjaman;
+use App\Models\ProfilSekolah;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -136,11 +137,36 @@ class AdminController extends Controller
     }
 
     public function profilSekolah(){
-        $data = [
-            'title' => 'Kelola Profil Sekolah'
-        ];
 
-        return view('roleAdmin.profilSekolah', $data);
+        return view('roleAdmin.profilSekolah');
+    }
+
+    public function profilSekolahStore(Request $request){
+        $request->validate([
+            'logo_sekolah' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'nama_sekolah' => 'required|string|max:100',
+            'alamat_sekolah' => 'required|string|max:100'
+        ]);
+
+        $file = $request->file('logo_sekolah');
+        $extension = $file->getClientOriginalExtension(); // misal "jpg" atau "png"
+        $logoFilename = 'logo_sekolah.' . $extension;
+
+        // Simpan file ke storage/public/profil_sekolah
+        $logoPath = $request->file('logo_sekolah')->storeAs('profil_sekolah', $logoFilename, 'public');
+
+        // Simpan ke database
+        ProfilSekolah::updateOrCreate(
+            ['id_user' => Auth::user()->id_user],
+            [
+                'logo_sekolah' => $logoPath,
+                'nama_sekolah' => $request->nama_sekolah,
+                'alamat_sekolah' => $request->alamat_sekolah,
+                'updated_at' => now()
+            ]
+        );
+
+        return redirect()->back()->with('success', 'Profil sekolah berhasil disimpan');
     }
 
     public function konfigurasiPinjaman(){
@@ -464,9 +490,12 @@ class AdminController extends Controller
             ->has('pinjaman')
             ->get();
 
+        $ProfilSekolah = ProfilSekolah::first();
+
         // Kirim ke view PDF
         $pdf = Pdf::loadView('roleAdmin.laporanPinjamanPDF', [
-            'users' => $users
+            'users' => $users,
+            'profilSekolah' => $ProfilSekolah
         ])->setPaper('A4', 'landscape'); // agar lebih lebar
 
         return $pdf->download('Laporan-Pinjaman-Anggota.pdf');
@@ -474,8 +503,15 @@ class AdminController extends Controller
 
     public function eksporPDFSimpanan()
     {
-        $users = User::with('simpananPokok')->get(); // pastikan relasi simpanan tersedia
-        $pdf = PDF::loadView('roleAdmin.laporanSimpananPDF', compact('users'))->setPaper('A4', 'portrait');
+        $users = User::with('simpananPokok')->get();
+
+        $ProfilSekolah = ProfilSekolah::first();
+
+        $pdf = Pdf::loadView('roleAdmin.laporanSimpananPDF',[
+            'users' => $users,
+            'profilSekolah' => $ProfilSekolah
+        ])->setPaper('A4', 'landsacape');
+        
         return $pdf->download('Laporan-Simpanan-Anggota.pdf');
     }
 }

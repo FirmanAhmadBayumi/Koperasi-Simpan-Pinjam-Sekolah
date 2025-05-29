@@ -13,20 +13,7 @@
             <div class="container">
                 <div class="page-inner">
                     <div class="page-header">
-                        <h3 class="fw-bold mb-3">Tanggungan</h3>
-                        <ul class="breadcrumbs mb-3">
-                            <li class="nav-home">
-                                <a href="#">
-                                    <i class="icon-home"></i>
-                                </a>
-                            </li>
-                            <li class="separator">
-                                <i class="icon-arrow-right"></i>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#">Tanggungan Anggota</a>
-                            </li>
-                        </ul>
+                        <h3 class="fw-bold mb-3">Pembayaran</h3>
                     </div>
 
                     <div class="row">
@@ -34,7 +21,76 @@
                             <div class="card">
                                 <div class="card-header">
                                     <div class="d-flex align-items-center">
-                                        <h4 class="card-title">Tanggungan Simpanan</h4>
+                                        <h4 class="card-title">Pembayaran Pinjaman</h4>
+                                        @if ($cekPinjaman->count() > 1)
+                                            <form class="form-update-status ms-auto" action="{{ route('pinjamanLunas.update') }}" method="post">
+                                                @csrf
+                                                <input type="hidden" name="status" value="Lunas">
+                                                <button type="submit" class="btn btn-warning btn-round btn-setujui pay-buttonLunas"
+                                                    data-snap-token="{{ $tanggungan->snap_tokenLunas }}">Bayar Lunas</button>
+                                            </form>
+                                        @else
+
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="add-row" class="display table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>Jatuh Tempo</th>
+                                                    <th>Iuran/Bulan</th>
+                                                    <th style="text-align: center;">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse ($transaksiPinjaman as $t)
+                                                    <tr id="row_{{ $t->id_transaksiPinjaman }}">
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $t->jatuh_tempo }}</td>
+                                                        <td>Rp{{ number_format(ceil($t->tanggungan->iuran_perBulan), 0, ',', '.') }}</td>
+                                                        <td id="aksi_{{ $t->id_transaksiPinjaman }}" style="text-align: center;">
+                                                            @if ($t->keterangan != 'Lunas')
+                                                                @php
+                                                                    $prevTransaksi = $transaksiPinjaman->where('id_transaksiPinjaman', $t->id_transaksiPinjaman - 1)->first();
+                                                                @endphp
+                                                                @if ($loop->first || ($prevTransaksi && $prevTransaksi->keterangan == 'Lunas'))
+                                                                    <form class="form-update-status"
+                                                                        action="{{ route('pinjaman.update', $t->id_transaksiPinjaman) }}" method="post"
+                                                                        data-id="{{ $t->id_transaksiPinjaman }}">
+                                                                        @csrf
+                                                                        <input type="hidden" name="status" value="Lunas">
+                                                                        <button type="submit" class="btn btn-primary btn-setujui pay-button"
+                                                                            data-snap-token="{{ $t->snap_token }}">{{ $t->keterangan }}</button>
+                                                                    </form>
+                                                                @else
+                                                                    <button class="btn btn-primary" disabled>{{ $t->keterangan }}</button>
+                                                                @endif
+                                                            @else
+                                                                <button class="btn btn-dark" disabled>{{ $t->keterangan }}</button>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @empty
+
+                                                @endforelse
+                                            </tbody>
+                    
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-flex align-items-center">
+                                        <h4 class="card-title">Pembayaran Simpanan Pokok</h4>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -45,7 +101,7 @@
                                                     <th>No.</th>
                                                     <th>Jatuh Tempo</th>
                                                     <th>Iuran/Bulan</th>
-                                                    <th style="text-align: center;">Keterangan</th>
+                                                    <th style="text-align: center;">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -71,72 +127,6 @@
 
                                                 @endforelse
                                             </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="d-flex align-items-center">
-                                        <h4 class="card-title">Tanggungan Pinjaman</h4>
-                                        @if ($cekPinjaman->count() > 1)
-                                            <form class="form-update-status ms-auto" action="{{ route('pinjamanLunas.update') }}" method="post">
-                                                @csrf
-                                                <input type="hidden" name="status" value="Lunas">
-                                                <button type="submit" class="btn btn-warning btn-round btn-setujui pay-buttonLunas" data-snap-token="{{ $tanggungan->snap_tokenLunas }}">Bayar Lunas</button>
-                                            </form>
-                                        @else
-                                            
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table id="add-row" class="display table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>No.</th>
-                                                    <th>Jatuh Tempo</th>
-                                                    <th>Iuran/Bulan</th>
-                                                    <th style="text-align: center;">Keterangan</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse ($transaksiPinjaman as $t)
-                                                    <tr id="row_{{ $t->id_transaksiPinjaman }}">
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $t->jatuh_tempo }}</td>
-                                                        <td>Rp{{ number_format(ceil($t->tanggungan->iuran_perBulan), 0, ',', '.') }}</td>
-                                                        <td id="aksi_{{ $t->id_transaksiPinjaman }}" style="text-align: center;">
-                                                            @if ($t->keterangan != 'Lunas')
-                                                                @php
-                                                                    $prevTransaksi = $transaksiPinjaman->where('id_transaksiPinjaman', $t->id_transaksiPinjaman - 1)->first();
-                                                                @endphp
-                                                                @if ($loop->first || ($prevTransaksi && $prevTransaksi->keterangan == 'Lunas'))
-                                                                    <form class="form-update-status" action="{{ route('pinjaman.update', $t->id_transaksiPinjaman) }}" 
-                                                                        method="post" data-id="{{ $t->id_transaksiPinjaman }}" >
-                                                                        @csrf
-                                                                        <input type="hidden" name="status" value="Lunas">
-                                                                        <button type="submit" class="btn btn-primary btn-setujui pay-button" data-snap-token="{{ $t->snap_token }}">{{ $t->keterangan }}</button>
-                                                                    </form>
-                                                                @else
-                                                                    <button class="btn btn-primary" disabled>{{ $t->keterangan }}</button>
-                                                                @endif
-                                                            @else
-                                                                <button class="btn btn-dark" disabled>{{ $t->keterangan }}</button>
-                                                            @endif
-                                                        </td>
-                                                    </tr>
-                                                @empty
-
-                                                @endforelse
-                                            </tbody>
-
                                         </table>
                                     </div>
                                 </div>
@@ -169,7 +159,9 @@
     <script src="../assets/js/setting-demo2.js"></script>
 
     <!-- MidTrans -->
-    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" 
+    data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}">
+    </script>
     <script type="text/javascript">
         $("#add-row").DataTable({
             pageLength: 25,
