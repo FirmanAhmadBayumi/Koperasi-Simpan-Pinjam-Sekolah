@@ -14,19 +14,6 @@
                 <div class="page-inner">
                     <div class="page-header">
                         <h3 class="fw-bold mb-3">Data Transaksi Pinjaman</h3>
-                        <ul class="breadcrumbs mb-3">
-                            <li class="nav-home">
-                                <a href="#">
-                                    <i class="icon-home"></i>
-                                </a>
-                            </li>
-                            <li class="separator">
-                                <i class="icon-arrow-right"></i>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#">Transaksi Pinjaman</a>
-                            </li>
-                        </ul>
                     </div>
 
                     <div class="row">
@@ -40,7 +27,8 @@
                                             <thead>
                                                 <tr>
                                                     <th>No.</th>
-                                                    <th>Tenor Pinjaman</th>
+                                                    <th>Besar Pinjaman</th>
+                                                    <th>Total Pinjaman</th>
                                                     <th>Keterangan</th>
                                                     <th>Iuran Cicilan</th>
                                                     <th>Jatuh Tempo</th>
@@ -79,7 +67,8 @@
                                                     @endphp
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $tp->tanggungan->pinjaman->tenor_pinjaman }}x</td>
+                                                        <td>{{ $tp->tanggungan->pinjaman->besar_pinjaman }}</td>
+                                                        <td>{{ $tp->tanggungan->total_pinjaman }}</td>
                                                         <td>Cicilan ke-{{ $installmentNumber }}</td>
                                                         <td>{{ 'Rp. ' . number_format(ceil($tp->tanggungan->iuran_perBulan), 0, ',', '.') }}</td>
                                                         <td>{{ $tp->jatuh_tempo }}</td>

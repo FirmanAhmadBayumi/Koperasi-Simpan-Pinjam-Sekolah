@@ -51,6 +51,26 @@
 
     <body>
         {{ $slot }}
+        <script>
+            function tampilkanModalProfilSekolah() {
+                // Jika modal belum dimuat, fetch dari server
+                if (!document.getElementById('kelolaProfilSekolah')) {
+                    fetch('{{ route('profilSekolah') }}')
+                        .then(res => res.text())
+                        .then(html => {
+                            const div = document.createElement('div');
+                            div.innerHTML = html;
+                            document.body.appendChild(div);
+                            var myModal = new bootstrap.Modal(document.getElementById('kelolaProfilSekolah'));
+                            myModal.show();
+                        });
+                } else {
+                    // Modal sudah ada, langsung tampilkan
+                    var myModal = new bootstrap.Modal(document.getElementById('kelolaProfilSekolah'));
+                    myModal.show();
+                }
+            }
+        </script>
     </body>
 
 </html>

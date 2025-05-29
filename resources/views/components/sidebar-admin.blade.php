@@ -4,6 +4,8 @@
         <div class="logo-header" data-background-color="dark" style="display: flex; justify-content: center; align-items: center; height: 70px;">
             <a href="/adminDashboard" class="logo">
                 <img src="assets/img/kaiadmin/sideBarLogo.png" alt="navbar brand" class="navbar-brand" height="160" />
+                {{-- <img src="{{ asset('storage/' . ($profil->logo_sekolah ?? 'assets/img/kaiadmin/sideBarLogo.png')) }}" alt="navbar brand"
+                    class="navbar-brand" width="150" height="75" /> --}}
             </a>
             <div class="nav-toggle">
                 <button class="btn btn-toggle toggle-sidebar">
@@ -41,8 +43,8 @@
                         <p>Data Anggota</p>
                     </a>
                 </li>
-                <li class="{{ request()->is('profilSekolah') ? 'nav-item active' : 'nav-item'}}">
-                    <a href="/profilSekolah">
+                <li class="nav-item">
+                    <a href="#" onclick="tampilkanModalProfilSekolah()">
                         <i class="fas fa-school"></i>
                         <p>Kelola Profil Sekolah</p>
                     </a>

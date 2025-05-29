@@ -14,19 +14,6 @@
                     <div class="page-inner">
                         <div class="page-header">
                             <h3 class="fw-bold mb-3">Konfigurasi Pinjaman</h3>
-                            <ul class="breadcrumbs mb-3">
-                                <li class="nav-home">
-                                    <a href="#">
-                                        <i class="icon-home"></i>
-                                    </a>
-                                </li>
-                                <li class="separator">
-                                    <i class="icon-arrow-right"></i>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#">Konfigurasi Pinjaman</a>
-                                </li>
-                            </ul>
                         </div>
 
                         <div class="row">
@@ -54,8 +41,8 @@
                                                 </thead>
                                                 <tbody>
                                                     <td>{{ $konfigurasiPinjaman->bunga_pinjaman }}</td>
-                                                    <td>{{ $konfigurasiPinjaman->maks_pinjaman }}</td>
-                                                    <td>{{ $konfigurasiPinjaman->maks_tenor }}</td>
+                                                    <td>{{ 'Rp. ' . number_format($konfigurasiPinjaman->maks_pinjaman, 0, ',', '.') }}</td>
+                                                    <td>{{ $konfigurasiPinjaman->maks_tenor }} Bulan</td>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -70,8 +57,10 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header border-0">
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
+                                <h5 class="modal-title">
+                                    <span class="fw-light">Konfigurasi Pinjaman</span>
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 </button>
                             </div>
                             <div class="modal-body">

@@ -13,20 +13,7 @@
                 <div class="container">
                     <div class="page-inner">
                         <div class="page-header">
-                            <h3 class="fw-bold mb-3">Pinjaman</h3>
-                            <ul class="breadcrumbs mb-3">
-                                <li class="nav-home">
-                                    <a href="#">
-                                        <i class="icon-home"></i>
-                                    </a>
-                                </li>
-                                <li class="separator">
-                                    <i class="icon-arrow-right"></i>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#">Data Pinjaman</a>
-                                </li>
-                            </ul>
+                            <h3 class="fw-bold mb-3">Kelola Pinjaman</h3>
                         </div>
 
                         <div class="row">
@@ -42,7 +29,8 @@
                                                         <th>Tanggal Pengajuan</th>
                                                         <th>Besar Pinjaman</th>
                                                         <th>Tenor Pinjaman</th>
-                                                        <th style="width: 10%">Keterangan</th>
+                                                        <th>Keterangan</th>
+                                                        <th style="width: 10%">Aksi</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -53,7 +41,14 @@
                                                             <td>{{ $p->tgl_pengajuan }}</td>
                                                             <td>{{ 'Rp. ' . number_format($p->besar_pinjaman, 0, ',', '.') }}
                                                             </td>
-                                                            <td>{{ $p->tenor_pinjaman }}x</td>
+                                                            <td>{{ $p->tenor_pinjaman }}</td>
+                                                            <td>
+                                                                @if($p->keterangan == 'Disetujui' || $p->keterangan == 'Ditolak')
+                                                                    -
+                                                                @else
+                                                                    {{ $p->keterangan }}
+                                                                @endif                                                       
+                                                            </td>
                                                             <td id="aksi_{{ $p->id_pinjaman }}">
                                                                 @if ($p->keterangan == 'Diproses')
                                                                     <div class="d-flex justify-content-between">
