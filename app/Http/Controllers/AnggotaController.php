@@ -31,7 +31,7 @@ class AnggotaController extends Controller
         $totalSimpanan = SimpananPokok::where('id_user', Auth::user()->id_user)->sum('total_simpanan');
         $totalSHU = User::where('id_user', Auth::user()->id_user)->sum('shu');
         $data = [
-            'title' => 'Dashboard',
+            'title' => 'Beranda',
             'simpanan' => $totalSimpanan,
             'shu' => $totalSHU,
         ];
@@ -198,7 +198,7 @@ class AnggotaController extends Controller
         }
 
         $data = [
-            'title' => 'Tanggungan',
+            'title' => 'Pembayaran',
             'transaksiPinjaman' => $transaksiPinjaman,
             'transaksiPokok' => $transaksiPokok,
             'tanggungan' => $tanggungan,
@@ -330,7 +330,7 @@ class AnggotaController extends Controller
             })->where('keterangan', 'Lunas')->get();
 
         $data = [
-            'title' => 'Transaksi Simpanan'
+            'title' => 'Transaksi Pinjaman'
         ];
 
         return view('roleAnggota.transaksiPinjaman', $data, compact('transaksiPinjaman'));
@@ -354,7 +354,7 @@ class AnggotaController extends Controller
     public function viewUser(Request $request): View
     {
         $data = [
-            'title' => 'Profile',
+            'title' => 'Profil',
         ];
         return view('roleAnggota.profile.view', $data, [
             'user' => $request->user()
@@ -370,17 +370,19 @@ class AnggotaController extends Controller
             'jenis_kelamin.required' => 'Jenis kelamin wajib diisi.',
             'jenis_kelamin.string' => 'Jenis kelamin harus berupa teks.',
 
+            'alamat.required' => 'Alamat wajib diisi.',
             'alamat.string' => 'Alamat harus berupa teks.',
 
-            'no_tlp.string' => 'Nomor telepon harus berupa teks.',
-            'no_tlp.max' => 'Nomor telepon maksimal 20 karakter.',
+            'no_tlp.required' => 'Nomor telepon wajib diisi.',
+            'no_tlp.regex' => 'Nomor telepon hanya boleh berisi angka.',
+            'no_tlp.max' => 'Nomor telepon maksimal 15 angka.',
         ];
 
         $validated = $request->validate([
             'nama' => ['required', 'string', 'max:255'],
             'jenis_kelamin' => ['required', 'string'],
-            'alamat' => ['nullable', 'string'],
-            'no_tlp' => ['nullable', 'string', 'max:20'],
+            'alamat' => ['required', 'string'],
+            'no_tlp' => ['required', 'regex:/^[0-9]+$/', 'max:15'],
         ], $messages);
 
         $request->user()->update($validated);
@@ -390,15 +392,17 @@ class AnggotaController extends Controller
     public function updatePassword(Request $request): RedirectResponse
     {
         $messages = [
-            'current_password.required' => 'Password saat ini wajib diisi.',
-            'current_password.current_password' => 'Password saat ini tidak sesuai.',
-            'password.required' => 'Password baru wajib diisi.',
-            'password.confirmed' => 'Konfirmasi password baru tidak cocok.',
+            'current_password.required' => 'Kata Sandi saat ini wajib diisi.',
+            'current_password.current_password' => 'Kata Sandi saat ini tidak sesuai.',
+            'password.required' => 'Kata Sandi baru wajib diisi.',
+            'password_confirmation.required' => 'Konfirmasi Kata Sandi baru wajib diisi.',
+            'password_confirmation.confirmed' => 'Konfirmasi Kata Sandi baru tidak cocok.',
         ];
 
         $validated = $request->validateWithBag('updatePassword', [
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
+            'password' => ['required', Password::defaults()],
+            'password_confirmation' => ['required', 'confirmed'],
         ], $messages);
 
         $request->user()->update([

@@ -21,15 +21,16 @@
                             <div class="card">
                                 <div class="card-header">
                                     <div class="card-title">Profil</div>
-                                    <p style="width: 500px; text-align: justify;">
-                                        Ubah Profil
-                                    </p>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <div class="max-w-xl">
+                                                    @if (session('status') === 'profile-updated')
+                                                        <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
+                                                            class="alert-success text-sm text-success mt-4">{{ __('Profil Berhasil Diubah') }}</p>
+                                                    @endif
                                                     @include('roleAnggota.profile.partials.update-profile-information-form')
                                                 </div>
                                             </div>
@@ -51,6 +52,10 @@
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <div class="max-w-xl">
+                                                    @if (session('status') === 'password-updated')
+                                                        <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
+                                                            class="allert-success text-sm text-gray-600 mt-4">{{ __('Saved.') }}</p>
+                                                    @endif
                                                     @include('roleAnggota.profile.partials.update-password-form')
                                                 </div>
                                             </div>

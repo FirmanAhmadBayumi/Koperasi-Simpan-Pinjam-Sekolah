@@ -51,9 +51,21 @@
 
     <body>
         {{ $slot }}
+        @include('roleAdmin.profilSekolah')
+
+        <!-- Script Modal Error/Sukses -->
+        @if ($errors->any() || session('success'))
+            <script>
+                window.addEventListener('DOMContentLoaded', function () {
+                    var modal = new bootstrap.Modal(document.getElementById('kelolaProfilSekolah'));
+                    modal.show();
+                });
+            </script>
+        @endif
+        
+        <!-- Script untuk load dinamis (opsional) -->
         <script>
             function tampilkanModalProfilSekolah() {
-                // Jika modal belum dimuat, fetch dari server
                 if (!document.getElementById('kelolaProfilSekolah')) {
                     fetch('{{ route('profilSekolah') }}')
                         .then(res => res.text())
@@ -65,7 +77,6 @@
                             myModal.show();
                         });
                 } else {
-                    // Modal sudah ada, langsung tampilkan
                     var myModal = new bootstrap.Modal(document.getElementById('kelolaProfilSekolah'));
                     myModal.show();
                 }

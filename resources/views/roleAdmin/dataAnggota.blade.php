@@ -54,7 +54,7 @@
                                                             <td>{{ $user->jenis_kelamin }}</td>
                                                             <td>{{ $user->alamat }}</td>
                                                             <td>{{ $user->no_tlp }}</td>
-                                                            <td>{{ $user->shu }}</td>
+                                                            <td>Rp{{ number_format(floor($user->shu), 0, ',', '.') }}</td>
                                                             <td>
                                                                 <div class="form-button-action">
                                                                     <a href="#"
@@ -122,7 +122,7 @@
                                             <div class="form-group form-group-default">
                                                 <label>Role</label>
                                                 <select class="form-select" name="usertype" id="add-usertype">
-                                                    <option value="user">Anggota</option>
+                                                    <option value="anggota">Anggota</option>
                                                     <option value="admin">Admin</option>
                                                 </select>
                                             </div>

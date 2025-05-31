@@ -16,7 +16,7 @@ class Anggota
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::user()->usertype != 'user'){
+        if(Auth::user()->usertype != 'anggota'){
             return redirect('adminDashboard');
         }
         return $next($request);

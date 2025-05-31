@@ -17,9 +17,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminController extends Controller
 {
+
+    // ------------------------------------- DASHBOARD ----------------------------------------
     public function index()
     {
-        $totalUsers = User::where('usertype', 'user')->count();
+        $totalUsers = User::where('usertype', 'anggota')->count();
         $totalBesarPinjaman = Pinjaman::where('keterangan', 'Disetujui')->sum('besar_pinjaman');
         $totalSimpanan = SimpananPokok::sum('total_simpanan');
 
@@ -65,9 +67,10 @@ class AdminController extends Controller
         ]);
     }
 
+    // ------------------------------------- DATA ANGGOTA ----------------------------------------
     public function dataAnggota()
     {
-        $users = User::where('usertype', 'user')->orderBy('id_user', 'asc')->get();
+        $users = User::where('usertype', 'anggota')->orderBy('id_user', 'asc')->get();
         $data = [
             'title' => 'Data Anggota',
         ];
@@ -136,6 +139,7 @@ class AdminController extends Controller
         }
     }
 
+    // ------------------------------------- PROFIL SEKOLAH ----------------------------------------
     public function profilSekolah(){
 
         return view('roleAdmin.profilSekolah');
@@ -143,10 +147,24 @@ class AdminController extends Controller
 
     public function profilSekolahStore(Request $request){
         $request->validate([
-            'logo_sekolah' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo_sekolah' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'nama_sekolah' => 'required|string|max:100',
             'alamat_sekolah' => 'required|string|max:100'
-        ]);
+        ],[
+            'logo_sekolah.required' => 'Logo sekolah wajib diisi.',
+            'logo_sekolah.image' => 'Unggah dalam bentuk file gambar.',
+            'logo_sekolah.mimes' => 'Format file gambar hanya jpeg,png,jpg.',
+            'logo_sekolah.max' => 'Maksimal ukuran file 2MB.',
+
+            'nama_sekolah.required' => 'Nama sekolah wajib diisi.',
+            'nama_sekolah.string' => 'Isi dengan teks.',
+            'nama_sekolah.max' => 'Maksimal 100 karakter',
+
+            'alamat_sekolah.required' => 'Alamat sekolah wajib diisi.',
+            'alamat_sekolah.string' => 'Isi dengan teks.',
+            'alamat_sekolah.max' => 'Maksimal 100 karakter',
+            ]
+        );
 
         $file = $request->file('logo_sekolah');
         $extension = $file->getClientOriginalExtension(); // misal "jpg" atau "png"
@@ -169,6 +187,7 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Profil sekolah berhasil disimpan');
     }
 
+    // ------------------------------------- KONFIGURASI PINJAMAN ----------------------------------------
     public function konfigurasiPinjaman(){
         $konfigurasiPinjaman = KonfigurasiPinjaman::first();
 
@@ -208,6 +227,119 @@ class AdminController extends Controller
         return response()->json(['message' => 'Berhasil']);
     }
 
+    // ------------------------------------- KELOLA PINJAMAN ----------------------------------------
+    public function dataPinjaman()
+    {
+        $pinjaman = Pinjaman::orderBy('id_pinjaman', 'asc')->get();
+        $data = [
+            'title' => 'Data Pinjaman',
+        ];
+        return view('roleAdmin.dataPinjaman', $data, compact('pinjaman'));
+    }
+
+    public function ubahStatusPinjaman(Request $request, $id_pinjaman)
+    {
+        DB::beginTransaction();
+
+        try {
+            $pinjaman = Pinjaman::findOrFail($id_pinjaman);
+            $pinjaman->keterangan = $request->input('status');
+            $pinjaman->save();
+
+            if ($pinjaman->keterangan == 'Disetujui') {
+                $this->createTanggungan($pinjaman);
+            }
+
+            DB::commit();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json(['success' => false, 'message' => 'Error updating status', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    protected function createTanggungan($pinjaman)
+    {
+        $konfig_bunga = KonfigurasiPinjaman::latest()->first();
+        $bunga_pinjaman = $konfig_bunga->bunga_pinjaman;
+
+        $besar_pinjaman = $pinjaman->besar_pinjaman;
+        // Bunga tahunan default
+        $bunga_bulanan = $bunga_pinjaman;
+        // Jumlah cicilan
+        $tenor = $pinjaman->tenor_pinjaman;
+        //jumlah bunga
+        $jumlah_bunga = $besar_pinjaman * $bunga_pinjaman;
+        //total pinjaman
+        $total_pembayaran = $besar_pinjaman + $jumlah_bunga;
+        //pembayaran bulanan
+        $pembayaran_bulanan = $total_pembayaran / $tenor;
+
+        // Set your Merchant Server Key
+        \Midtrans\Config::$serverKey = config('midtrans.serverKey');
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Midtrans\Config::$isProduction = false;
+        // Set sanitization on (default)
+        \Midtrans\Config::$isSanitized = true;
+        // Set 3DS transaction for credit card to true
+        \Midtrans\Config::$is3ds = true;
+
+        // Pembayaran Lunas
+        $paramsLunas = array(
+            'transaction_details' => array(
+                'order_id' => rand(),
+                'gross_amount' => ceil($besar_pinjaman),
+            ),
+            'customer_details' => array(
+                'first_name' => $pinjaman->user->nama,
+                'email' => $pinjaman->user->email,
+            ),
+        );
+        $snapTokenLunas = \Midtrans\Snap::getSnapToken($paramsLunas);
+
+        // Buat data tanggungan
+        $tanggungan = Tanggungan::create([
+            'id_pinjaman' => $pinjaman->id_pinjaman,
+            'total_pinjaman' => $total_pembayaran,
+            'bunga_pinjaman' => $jumlah_bunga,
+            'iuran_perBulan' => $pembayaran_bulanan,
+            'sisa_pinjaman' => $total_pembayaran,
+            'sisa_tenor' => $pinjaman->tenor_pinjaman,
+            'status_pinjaman' => 'Belum Lunas',
+            'snap_tokenLunas' => $snapTokenLunas,
+        ]);
+
+        // Pastikan tanggungan berhasil dibuat
+        if ($tanggungan) {
+            $jatuh_tempo_awal = now()->endOfDay();
+            for ($i = 1; $i <= $tenor; $i++) {
+                $params = array(
+                    'transaction_details' => array(
+                        'order_id' => rand(),
+                        'gross_amount' => ceil($pembayaran_bulanan),
+                    ),
+                    'customer_details' => array(
+                        'first_name' => $tanggungan->pinjaman->user->nama,
+                        'email' => $tanggungan->pinjaman->user->email,
+                    ),
+                );
+                $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+                $jatuh_tempo = $jatuh_tempo_awal->copy()->addMonths($i);
+                TransaksiPinjaman::create([
+                    'id_tanggungan' => $tanggungan->id_tanggungan,
+                    'jatuh_tempo' => $jatuh_tempo,
+                    'tanggal_pembayaran' => null,
+                    'snap_token' => $snapToken,
+                    'keterangan' => 'Bayar cicilan ke-' . $i
+                ]);
+            }
+        }
+    }
+
+    // ------------------------------------- KELOLA SIMPANAN POKOK ----------------------------------------
     public function dataSimpananPokok()
     {
         $simpanan = SimpananPokok::orderBy('id_simpanan_pokok', 'asc')->get();
@@ -217,13 +349,20 @@ class AdminController extends Controller
         return view('roleAdmin.dataSimpananPokok', $data, compact('simpanan'));
     }
 
-    public function dataPinjaman()
+    public function checkSimpananStatus() // Fungsi untuk memeriksa status simpanan
     {
-        $pinjaman = Pinjaman::orderBy('id_pinjaman', 'asc')->get();
-        $data = [
-            'title' => 'Data Pinjaman',
-        ];
-        return view('roleAdmin.dataPinjaman', $data, compact('pinjaman'));
+        $simpananList = SimpananPokok::all();
+        $disableButton = true;
+
+        // Periksa apakah ada pengguna yang berstatus Lunas
+        foreach ($simpananList as $simpanan) {
+            if ($simpanan->status_simpanan === 'Lunas') {
+                $disableButton = false;
+                break;
+            }
+        }
+
+        return response()->json(['disableButton' => $disableButton]);
     }
 
     public function buatTransaksiSimpanan(Request $request)
@@ -268,125 +407,7 @@ class AdminController extends Controller
         return response()->json(['message' => 'Transaksi berhasil dibuat untuk pengguna dengan status Lunas']);
     }
 
-    // Fungsi untuk memeriksa status simpanan
-    public function checkSimpananStatus()
-    {
-        $simpananList = SimpananPokok::all();
-        $disableButton = true;
-
-        // Periksa apakah ada pengguna yang berstatus Lunas
-        foreach ($simpananList as $simpanan) {
-            if ($simpanan->status_simpanan === 'Lunas') {
-                $disableButton = false;
-                break;
-            }
-        }
-
-        return response()->json(['disableButton' => $disableButton]);
-    }
-
-    protected function createTanggungan($pinjaman)
-    {
-        $konfig_bunga = KonfigurasiPinjaman::latest()->first();
-        $bunga_pinjaman = $konfig_bunga->bunga_pinjaman;
-
-        $besar_pinjaman = $pinjaman->besar_pinjaman;
-        // Bunga tahunan default
-        $bunga_bulanan = $bunga_pinjaman;
-        // Jumlah cicilan
-        $tenor = $pinjaman->tenor_pinjaman;
-        //jumlah bunga
-        $jumlah_bunga = $besar_pinjaman * $bunga_pinjaman;
-        //total pinjaman
-        $total_pembayaran = $besar_pinjaman + $jumlah_bunga;
-        //pembayaran bulanan
-        $pembayaran_bulanan = $total_pembayaran / $tenor;
-
-        // Set your Merchant Server Key
-        \Midtrans\Config::$serverKey = config('midtrans.serverKey');
-        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-        \Midtrans\Config::$isProduction = false;
-        // Set sanitization on (default)
-        \Midtrans\Config::$isSanitized = true;
-        // Set 3DS transaction for credit card to true
-        \Midtrans\Config::$is3ds = true;
-
-        // Pembayaran Lunas
-        $paramsLunas = array(
-            'transaction_details' => array(
-                'order_id' => rand(),
-                'gross_amount' => ceil($besar_pinjaman),
-            ),
-            'customer_details' => array(
-                'first_name' => $pinjaman->user->nama,
-                'email' => $pinjaman->user->email,
-            ),
-        );
-        $snapTokenLunas = \Midtrans\Snap::getSnapToken($paramsLunas);
-
-         // Buat data tanggungan
-        $tanggungan = Tanggungan::create([
-            'id_pinjaman' => $pinjaman->id_pinjaman,
-            'total_pinjaman' => $total_pembayaran,
-            'bunga_pinjaman' => $jumlah_bunga,
-            'iuran_perBulan' => $pembayaran_bulanan,
-            'sisa_pinjaman' => $total_pembayaran,
-            'sisa_tenor' => $pinjaman->tenor_pinjaman,
-            'status_pinjaman' => 'Belum Lunas',
-            'snap_tokenLunas' => $snapTokenLunas,
-        ]);
-
-        // Pastikan tanggungan berhasil dibuat
-        if ($tanggungan) {
-            $jatuh_tempo_awal = now()->endOfDay();
-            for ($i = 1; $i <= $tenor; $i++) {
-                $params = array(
-                    'transaction_details' => array(
-                        'order_id' => rand(),
-                        'gross_amount' => ceil($pembayaran_bulanan),
-                    ),
-                    'customer_details' => array(
-                        'first_name' => $tanggungan->pinjaman->user->nama,
-                        'email' => $tanggungan->pinjaman->user->email,
-                    ),
-                );
-                $snapToken = \Midtrans\Snap::getSnapToken($params);
-
-                $jatuh_tempo = $jatuh_tempo_awal->copy()->addMonths($i);
-                TransaksiPinjaman::create([
-                    'id_tanggungan' => $tanggungan->id_tanggungan,
-                    'jatuh_tempo' => $jatuh_tempo,
-                    'tanggal_pembayaran' => null,
-                    'snap_token' => $snapToken,
-                    'keterangan' => 'Bayar cicilan ke-' . $i
-                ]);
-            }
-        }
-    }
-    
-    public function ubahStatusPinjaman(Request $request, $id_pinjaman)
-    {
-        DB::beginTransaction();
-
-        try {
-            $pinjaman = Pinjaman::findOrFail($id_pinjaman);
-            $pinjaman->keterangan = $request->input('status');
-            $pinjaman->save();
-
-            if ($pinjaman->keterangan == 'Disetujui') {
-                $this->createTanggungan($pinjaman);
-            }
-
-            DB::commit();
-
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return response()->json(['success' => false, 'message' => 'Error updating status', 'error' => $e->getMessage()], 500);
-        }
-    }
-
+    // ------------------------------------- LAPORAN PINJAMAN ----------------------------------------
     public function dataTanggungan()
     {
         $tanggungan = Tanggungan::with('pinjaman.user')->whereHas('pinjaman', function ($query) {
@@ -450,6 +471,25 @@ class AdminController extends Controller
         return response()->json($tanggunganData);
     }
 
+    public function eksporPDFPinjaman()
+    {
+        // Ambil semua user yang punya pinjaman dan transaksinya
+        $users = User::with(['pinjaman.tanggungan.transaksiPinjaman'])
+            ->has('pinjaman')
+            ->get();
+
+        $ProfilSekolah = ProfilSekolah::first();
+
+        // Kirim ke view PDF
+        $pdf = Pdf::loadView('roleAdmin.laporanPinjamanPDF', [
+            'users' => $users,
+            'profilSekolah' => $ProfilSekolah
+        ])->setPaper('A4', 'landscape'); // agar lebih lebar
+
+        return $pdf->download('Laporan-Pinjaman-Anggota.pdf');
+    }
+
+    // ------------------------------------- LAPORAN SIMPANAN POKOK ----------------------------------------
     public function viewTransaksiSimpanan()
     {
     $transaksiPokok = User::with(['simpananPokok.transaksiPokok'])
@@ -481,24 +521,6 @@ class AdminController extends Controller
         });
 
         return response()->json($transaksi);
-    }
-
-    public function eksporPDFPinjaman()
-    {
-        // Ambil semua user yang punya pinjaman dan transaksinya
-        $users = User::with(['pinjaman.tanggungan.transaksiPinjaman'])
-            ->has('pinjaman')
-            ->get();
-
-        $ProfilSekolah = ProfilSekolah::first();
-
-        // Kirim ke view PDF
-        $pdf = Pdf::loadView('roleAdmin.laporanPinjamanPDF', [
-            'users' => $users,
-            'profilSekolah' => $ProfilSekolah
-        ])->setPaper('A4', 'landscape'); // agar lebih lebar
-
-        return $pdf->download('Laporan-Pinjaman-Anggota.pdf');
     }
 
     public function eksporPDFSimpanan()

@@ -41,8 +41,8 @@
                         <p>Pengajuan Pinjaman</p>
                     </a>
                 </li>
-                <li class="{{request()->is('tanggungan') ? 'nav-item active' : 'nav-item'}}">
-                    <a href="/tanggungan">
+                <li class="{{request()->is('pembayaran') ? 'nav-item active' : 'nav-item'}}">
+                    <a href="/pembayaran">
                         <i class="fas fa-donate"></i>
                         <p>Pembayaran</p>
                     </a>
@@ -53,21 +53,21 @@
                         <p>Riwayat Pinjaman</p>
                     </a>
                 </li> --}}
-                <li class="nav-item {{ request()->is('transaksiSimpananUser', 'transaksiPinjamanUser') ? 'active' : '' }}">
+                <li class="nav-item {{ request()->is('transaksiSimpanan', 'transaksiPinjaman') ? 'active' : '' }}">
                     <a href="#" data-bs-toggle="collapse" data-bs-target="#submenuTransaksi" aria-expanded="{{ request()->is('transaksiSimpanan', 'transaksiPinjaman') ? 'true' : 'false' }}" aria-controls="submenuTransaksi">
                         <i class="fas fa-history"></i>
                         <p>Data Transaksi</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse {{ request()->is('transaksiSimpananUser', 'transaksiPinjamanUser') ? 'show' : '' }}" id="submenuTransaksi">
+                    <div class="collapse {{ request()->is('transaksiSimpanan', 'transaksiPinjaman') ? 'show' : '' }}" id="submenuTransaksi">
                         <ul class="nav nav-collapse">
-                            <li class="{{ request()->is('transaksiPinjamanUser') ? 'active' : '' }}">
-                                <a href="/transaksiPinjamanUser">
+                            <li class="{{ request()->is('transaksiPinjaman') ? 'active' : '' }}">
+                                <a href="/transaksiPinjaman">
                                     <span class="sub-item">Pinjaman</span>
                                 </a>
                             </li>
-                            <li class="{{ request()->is('transaksiSimpananUser') ? 'active' : '' }}">
-                                <a href="/transaksiSimpananUser">
+                            <li class="{{ request()->is('transaksiSimpanan') ? 'active' : '' }}">
+                                <a href="/transaksiSimpanan">
                                     <span class="sub-item">Simpanan Pokok</span>
                                 </a>
                             </li>

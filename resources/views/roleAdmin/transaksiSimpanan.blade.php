@@ -132,6 +132,15 @@
                 pageLength: 25,
             });
 
+            // Fungsi format Rupiah
+            const formatRupiah = (angka) => {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(angka);
+            };
+
             // Tombol detail transaksi klik handler
             $('.btn-detail-transaksi').on('click', function (e) {
                 e.preventDefault();
@@ -157,14 +166,15 @@
                         let rows = '';
                         if (data.length > 0) {
                             data.forEach((item, index) => {
+                                const iuranFormatted = item.iuran != null ? formatRupiah(item.iuran) : '-';
                                 rows += `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${item.iuran ?? '-'}</td>
-                            <td>${item.jatuh_tempo ?? '-'}</td>
-                            <td>${item.tanggal_pembayaran ?? '-'}</td>
-                            <td>${item.keterangan ?? '-'}</td>
-                        </tr>`;
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${iuranFormatted}</td>
+                                    <td>${item.jatuh_tempo ?? '-'}</td>
+                                    <td>${item.tanggal_pembayaran ?? '-'}</td>
+                                    <td>${item.keterangan ?? '-'}</td>
+                                </tr>`;
                             });
                         } else {
                             rows = `<tr><td colspan="5" class="text-center">Tidak ada data transaksi.</td></tr>`;
@@ -179,4 +189,5 @@
             });
         });
     </script>
+    
 </x-layout>

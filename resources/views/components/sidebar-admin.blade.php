@@ -44,7 +44,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" onclick="tampilkanModalProfilSekolah()">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#kelolaProfilSekolah">
                         <i class="fas fa-school"></i>
                         <p>Kelola Profil Sekolah</p>
                     </a>
@@ -67,21 +67,21 @@
                         <p>Kelola Simpanan Pokok</p>
                     </a>
                 </li>
-                <li class="nav-item {{ request()->is('transaksiSimpanan', 'transaksiPinjaman') ? 'active' : '' }}">
+                <li class="nav-item {{ request()->is('laporanSimpanan', 'laporanPinjaman') ? 'active' : '' }}">
                     <a href="#" data-bs-toggle="collapse" data-bs-target="#submenuTransaksi" aria-expanded="{{ request()->is('transaksiSimpanan', 'transaksiPinjaman') ? 'true' : 'false' }}" aria-controls="submenuTransaksi">
                         <i class="fas fa-history"></i>
                         <p>Laporan</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse {{ request()->is('transaksiSimpanan', 'transaksiPinjaman') ? 'show' : '' }}" id="submenuTransaksi">
+                    <div class="collapse {{ request()->is('laporanSimpanan', 'laporanPinjaman') ? 'show' : '' }}" id="submenuTransaksi">
                         <ul class="nav nav-collapse">
-                            <li class="{{ request()->is('transaksiPinjaman') ? 'active' : '' }}">
-                                <a href="/transaksiPinjaman">
+                            <li class="{{ request()->is('laporanPinjaman') ? 'active' : '' }}">
+                                <a href="/laporanPinjaman">
                                     <span class="sub-item">Pinjaman</span>
                                 </a>
                             </li>
-                            <li class="{{ request()->is('transaksiSimpanan') ? 'active' : '' }}">
-                                <a href="/transaksiSimpanan">
+                            <li class="{{ request()->is('laporanSimpanan') ? 'active' : '' }}">
+                                <a href="/laporanSimpanan">
                                     <span class="sub-item">Simpanan Pokok</span>
                                 </a>
                             </li>
