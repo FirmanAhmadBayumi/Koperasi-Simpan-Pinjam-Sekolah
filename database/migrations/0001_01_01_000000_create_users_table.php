@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('nama', 40);
             $table->string('email', 40)->unique();
             $table->string('NIP', 19)->unique();
-            $table->string('jenis_kelamin', 10);
+            $table->enum('jenis_kelamin', ['Laki-Laki', 'Perempuan']);
             $table->string('alamat', 100);
             $table->string('no_tlp', 20);
             $table->double('shu',)->default(0);
-            $table->enum('usertype', ['user', 'admin']);
+            $table->enum('usertype', ['anggota', 'admin']);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 100);
             $table->rememberToken();    

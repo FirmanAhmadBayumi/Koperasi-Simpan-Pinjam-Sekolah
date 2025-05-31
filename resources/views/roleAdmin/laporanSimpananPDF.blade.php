@@ -59,10 +59,10 @@
 <body>
 
     <div class="header">
-        <h2 class="mb-3">KOPERASI SIMPAN PINJAM SEKOLAH</h2>
-        <h3>{{ $profilSekolah->nama_sekolah }}</h3>
-        <h3>{{ $profilSekolah->alamat_sekolah }}</h3>
-        <h3><u>LAPORAN Simpanan ANGGOTA</u></h3>
+        <h1>KOPERASI SIMPAN PINJAM SEKOLAH</h1>
+        <h3 class="mt-3">{{ $profilSekolah->nama_sekolah }}</h3><br>
+        <h3 class="mt-3">{{ $profilSekolah->alamat_sekolah }}</h3><br>
+        <h3 class="mt-3">LAPORAN SIMPANAN ANGGOTA</h3>
     </div>
 
     <table>
@@ -79,14 +79,14 @@
             @php $no = 1; @endphp
             @foreach ($users as $user)
                 @php
-                    $totalSimpanan = $user->simpananPokok ? $user->simpananPokok->sum('total_simpanan') : 0;
+    $totalSimpanan = $user->simpananPokok ? $user->simpananPokok->sum('total_simpanan') : 0;
                 @endphp
                         <tr>
                             <td>{{ $no++ }}</td>
                             <td class="text-left">{{ $user->nama }}</td>
                             <td>{{ $user->NIP }}</td>
                             <td class="text-left">{{ $user->alamat ?? '-' }}</td>
-                            <td>{{ 'Rp.'.number_format($totalSimpanan, 0, ',', '.') }}</td>
+                            <td>{{ 'Rp.' . number_format($totalSimpanan, 0, ',', '.') }}</td>
                         </tr>
             @endforeach
         </tbody>

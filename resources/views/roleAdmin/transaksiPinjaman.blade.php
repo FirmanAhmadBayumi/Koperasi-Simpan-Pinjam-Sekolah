@@ -143,6 +143,15 @@
                 pageLength: 25,
             });
 
+            // Fungsi format Rupiah
+            const formatRupiah = (angka) => {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(angka);
+            };
+
             // Tombol detail transaksi klik handler
             $('.btn-detail-transaksi').on('click', function (e) {
                 e.preventDefault();
@@ -177,10 +186,13 @@
                                     rows += '<tr>';
                                     rows += `<td>${rowIndex++}</td>`;
 
-                                    // Tampilkan total_pinjaman dan status_pinjaman hanya di baris pertama
+                                    // Tampilkan total_pinjaman dan angsuran hanya di baris pertama
                                     if (index === 0) {
-                                        rows += `<td rowspan="${rowspan}">${tanggungan.total_pinjaman ?? '-'}</td>`;
-                                        rows += `<td rowspan="${rowspan}">${tanggungan.angsuran ?? '-'}</td>`;
+                                        const totalPinjaman = tanggungan.total_pinjaman != null ? formatRupiah(tanggungan.total_pinjaman) : '-';
+                                        const angsuran = tanggungan.angsuran != null ? formatRupiah(tanggungan.angsuran) : '-';
+
+                                        rows += `<td rowspan="${rowspan}">${totalPinjaman}</td>`;
+                                        rows += `<td rowspan="${rowspan}">${angsuran}</td>`;
                                     }
 
                                     rows += `<td>${trx.jatuh_tempo}</td>`;
@@ -202,4 +214,5 @@
             });
         });
     </script>
+    
 </x-layout>

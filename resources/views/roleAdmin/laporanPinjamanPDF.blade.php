@@ -59,10 +59,10 @@
 <body>
 
     <div class="header">
-        <h2>KOPERASI SIMPAN PINJAM SEKOLAH</h2>
-        <h3>{{ $profilSekolah->nama_sekolah }}</h3>
-        <h3>{{ $profilSekolah->alamat_sekolah }}</h3>
-        <h3><u>LAPORAN PINJAMAN ANGGOTA</u></h3>
+        <h1>KOPERASI SIMPAN PINJAM SEKOLAH</h1>
+        <h3 class="mt-3">{{ $profilSekolah->nama_sekolah }}</h3><br>
+        <h3 class="mt-3">{{ $profilSekolah->alamat_sekolah }}</h3><br>
+        <h3 class="mt-3">LAPORAN PINJAMAN ANGGOTA</h3>
     </div>
 
     <table>
@@ -82,9 +82,9 @@
                 @php $totalPinjamanUser = $user->pinjaman->count(); @endphp
                 @foreach($user->pinjaman as $index => $pinjaman)
                                 @php
-                                    $tanggungan = $pinjaman->tanggungan->first();
-                                    $totalPinjaman = $tanggungan->total_pinjaman ?? '-';
-                                    $statusPinjaman = $tanggungan->status_pinjaman ?? '-';
+        $tanggungan = $pinjaman->tanggungan->first();
+        $totalPinjaman = $tanggungan->total_pinjaman ?? '-';
+        $statusPinjaman = $tanggungan->status_pinjaman ?? '-';
                                 @endphp
                                 <tr>
                                     @if($index === 0)

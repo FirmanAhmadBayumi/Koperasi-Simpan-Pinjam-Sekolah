@@ -39,10 +39,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('dataPinjaman', [AdminController::class, 'dataPinjaman']);
     Route::post('updatePinjamanStatus/{id_pinjaman}', [AdminController::class, 'ubahStatusPinjaman'])->name('pinjaman.updateStatus');
 
-    Route::get('transaksiSimpanan', [AdminController::class, 'viewTransaksiSimpanan'])->name('viewTransaksiSimpanan.view');
+    Route::get('laporanSimpanan', [AdminController::class, 'viewTransaksiSimpanan'])->name('viewTransaksiSimpanan.view');
     Route::get('transaksiSimpanan/detail/{user_id}', [AdminController::class, 'getDetailTransaksiSimpanan'])->name('simpanan.transaksi.detail');
 
-    Route::get('transaksiPinjaman', [AdminController::class, 'viewTransaksiPinjaman'])->name('viewTransaksiPinjaman.view');
+    Route::get('laporanPinjaman', [AdminController::class, 'viewTransaksiPinjaman'])->name('viewTransaksiPinjaman.view');
     Route::get('transaksiPinjaman/detail/{user_id}', [AdminController::class, 'getDetailTransaksiPinjaman'])->name('pinjaman.transaksi.detail');
 
     Route::get('/laporanPinjaman/eksporPDF', [AdminController::class, 'eksporPDFPinjaman'])->name('laporan.pinjaman.eksporPDF');
@@ -51,20 +51,20 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // Routes Role Anggota
 Route::middleware(['auth', 'user'])->group(function () {
-    Route::get('dashboard', [AnggotaController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [AnggotaController::class, 'index'])->name('dashboard');
     Route::get('/anggota/chart-data', [AnggotaController::class, 'getChartData']);
 
     Route::get('pengajuan', [AnggotaController::class, 'pengajuan'])->name('pengajuan.view');
     Route::post('pengajuan', [AnggotaController::class, 'createPengajuan'])->name('pengajuan.create');
 
-    Route::get('/tanggungan', [AnggotaController::class, 'tanggungan'])->name('tanggungan.view');
+    Route::get('/pembayaran', [AnggotaController::class, 'tanggungan'])->name('tanggungan.view');
     Route::post('/updatePinjamanLunas', [AnggotaController::class, 'updatePinjamanLunas'])->name('pinjamanLunas.update');
     Route::post('/updatePinjaman/{id_transaksiPinjaman}', [AnggotaController::class, 'updatePinjaman'])->name('pinjaman.update');
     Route::post('/updateSimpanan/{id_transaksiPokok}', [AnggotaController::class, 'updateSimpanan'])->name('simpanan.update');
 
     Route::get('history', [AnggotaController::class, 'history']);
-    Route::get('transaksiSimpananUser', [AnggotaController::class, 'viewTransaksiSimpanan']);
-    Route::get('transaksiPinjamanUser', [AnggotaController::class, 'viewTransaksiPinjaman']);
+    Route::get('transaksiSimpanan', [AnggotaController::class, 'viewTransaksiSimpanan']);
+    Route::get('transaksiPinjaman', [AnggotaController::class, 'viewTransaksiPinjaman']);
 
     Route::get('/profile', [AnggotaController::class, 'viewUser'])->name('profile.view');
     Route::patch('/profile', [AnggotaController::class, 'updateUser'])->name('profile.update');
